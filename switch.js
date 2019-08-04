@@ -15,7 +15,7 @@ const hotSwitches = [{
 }];
 
 const alwaysMaximize = true;
-function sendMsg(title, message)
+function sendMsg(title, message, windowInfo = null)
 {
     notifier.notify(
         {
@@ -24,11 +24,11 @@ function sendMsg(title, message)
         //   icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
           sound: true, // Only Notification Center or Windows Toasters
           wait: true // Wait with callback, until user action is taken against notification
-        },
-        function(err, response) {
-          // Response is response from notification
-        }
-      );
+        });
+
+        notifier.on('click', function(notifierObject, options, event) {
+            // Triggers if `wait: true` and user clicks notification
+          });
 }
 
 ioHook.on('keyup', event => {
@@ -45,7 +45,7 @@ ioHook.on('keyup', event => {
                 let windows = windowManager.getWindows().filter(window => window.getTitle().includes(whichHotWindowToOpen.name));
                 // 6. If none is found exit the function
                 if (windows == null  || windows.length == 0) {
-                    sendMsg('Yikes 🤔', `Ops! It seems like ${whichHotWindowToOpen.name} is not opened`);
+                    sendMsg('Yikes 🤔', `Ops! It seems like ${whichHotWindowToOpen.name} is yet opened. Click to launch app! 🚀`);
                     return;
                 }
 
