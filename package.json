@@ -1,0 +1,15 @@
+{
+  "name": "switch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "switch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "iohook": "^0.6.1",
+    "node-window-manager": "^1.0.4"
+  }
+}
