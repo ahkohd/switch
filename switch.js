@@ -1,5 +1,6 @@
 const { windowManager } = require("node-window-manager");
 const ioHook = require('iohook');
+const notifier = require('node-notifier');
 
 // App name and shortcut keycodes..
 const hotSwitches = [{
@@ -14,6 +15,21 @@ const hotSwitches = [{
 }];
 
 const alwaysMaximize = true;
+function sendMsg(title, message)
+{
+    notifier.notify(
+        {
+          title: 'Switch - '+title,
+          message: message,
+        //   icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
+          sound: true, // Only Notification Center or Windows Toasters
+          wait: true // Wait with callback, until user action is taken against notification
+        },
+        function(err, response) {
+          // Response is response from notification
+        }
+      );
+}
 
 ioHook.on('keyup', event => {
     // 1. When use holds the alt key
@@ -28,7 +44,11 @@ ioHook.on('keyup', event => {
                 // 5. Get all windows that matches the app title
                 let windows = windowManager.getWindows().filter(window => window.getTitle().includes(whichHotWindowToOpen.name));
                 // 6. If none is found exit the function
-                if (windows == null) return
+                if (windows == null  || windows.length == 0) {
+                    sendMsg('Yikes 🤔', `Ops! It seems like ${whichHotWindowToOpen.name} is not opened`);
+                    return;
+                }
+
                 // 7. If the current process is a window, minimize it.
                 const currentWindow = windowManager.getActiveWindow();
                 if (currentWindow.isWindow()) {
@@ -52,6 +72,7 @@ ioHook.on('keyup', event => {
                 }
             } catch (e) {
                 console.log(e);
+                sendMsg('Error', e);
             }
         }
     }
