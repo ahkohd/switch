@@ -8,6 +8,9 @@ const hotSwitches = [{
 }, {
     name: 'Code',
     keycode: 3,
+},{
+    name: 'MagicaVoxel',
+    keycode: 4 
 }];
 
 const alwaysMaximize = true;
