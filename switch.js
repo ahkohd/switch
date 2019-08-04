@@ -45,7 +45,7 @@ ioHook.on('keyup', event => {
                 let windows = windowManager.getWindows().filter(window => window.getTitle().includes(whichHotWindowToOpen.name));
                 // 6. If none is found exit the function
                 if (windows == null  || windows.length == 0) {
-                    sendMsg('Yikes 🤔', `Ops! It seems like ${whichHotWindowToOpen.name} is yet opened. Click to launch app! 🚀`);
+                    sendMsg('Yikes 🤔', `Ops! It seems like ${whichHotWindowToOpen.name} is yet to be opened. Click to launch app! 🚀`);
                     return;
                 }
 
