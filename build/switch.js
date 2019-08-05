@@ -35,7 +35,7 @@ function fnMethod(event) {
         timer = null;
         react(event);
     }
-    if (event.keycode == 0 || event.keycode == 3640) {
+    if (event.rawcode == 255 || event.keycode == 3640) {
         if (timer != null)
             clearTimeout(timer);
         console.log('waiting for next key');

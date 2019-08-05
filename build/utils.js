@@ -40,6 +40,10 @@ function getHotApps() {
             name: 'MagicaVoxel',
             keycode: 4,
             path: 'C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe'
+        }, {
+            name: 'blender.exe',
+            keycode: 5,
+            path: 'C:\\Program Files (x86)\\Blender Foundation\\Blender'
         }];
 }
 exports.getHotApps = getHotApps;
@@ -78,8 +82,9 @@ function MakeHotAppActive(hotProcesses) {
     for (let i = 0; i < hotProcesses.length; i++) {
         if (hotProcesses[i].isWindow()) {
             console.log(hotProcesses);
-            hotProcesses[i].bringToTop();
-            hotProcesses[i].maximize();
+            const hot = hotProcesses[i];
+            hot.bringToTop();
+            hot.maximize();
             break;
         }
     }

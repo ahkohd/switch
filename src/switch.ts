@@ -69,7 +69,7 @@ function fnMethod(event) {
         timer = null;
         react(event);
     }
-    if (event.keycode == 0  || event.keycode == 3640) {
+    if (event.rawcode == 255  || event.keycode == 3640) {
         // fn key is pressed
         if (timer != null) clearTimeout(timer);
         console.log('waiting for next key');
@@ -88,6 +88,7 @@ function fnMethod(event) {
  */
 
 ioHook.on('keyup', event => {
+    // console.log(event);
     if (useFnKey) {
         // Fn or Right Alt key capture methohd.
         fnMethod(event);
