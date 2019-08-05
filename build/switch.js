@@ -23,19 +23,19 @@ function react(event) {
         }
     }
 }
-function capsOrAltMethod(event) {
+function capsMethod(event) {
     if (checkcaps.status() || event.altKey) {
         react(event);
     }
 }
 function fnMethod(event) {
     if (timer != null) {
-        console.log('fn + ', event.keycode);
+        console.log('(fn | (l|r) Shift | (l|r) Alt) then  ', event.keycode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.keycode == 0) {
+    if (event.keycode == 0 || event.keycode == 42 || event.keycode == 54 || event.keycode == 56 || event.keycode == 3640) {
         if (timer != null)
             clearTimeout(timer);
         console.log('waiting for next key');
@@ -51,7 +51,7 @@ ioHook.on('keyup', event => {
         fnMethod(event);
     }
     else {
-        capsOrAltMethod(event);
+        capsMethod(event);
     }
 });
 ioHook.start();

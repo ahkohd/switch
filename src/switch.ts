@@ -49,27 +49,27 @@ function react(event) {
  * or hold the alt key
  * @param  {} event
  */
-function capsOrAltMethod(event) {
-    // If caplocks is on of user holds alt key
+function capsMethod(event) {
+    // If caplocks on is react..
     if (checkcaps.status() || event.altKey) {
         react(event);
     }
 }
 
 /**
- * This methond activates hot app switch if user click fn key
+ * This methond activates hot app switch if user click (fn | l and r shift | l and r alt) key then the hot app code
  * and any key afterwards
  * @param  {} event
  */
 function fnMethod(event) {
     // detects fn + key combo..
     if (timer != null) {
-        console.log('fn + ', event.keycode);
+        console.log('(fn | (l|r) Shift | (l|r) Alt) then  ', event.keycode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.keycode == 0) {
+    if (event.keycode == 0 || event.keycode == 42 || event.keycode == 54 || event.keycode == 56 || event.keycode == 3640) {
         // fn key is pressed
         if (timer != null) clearTimeout(timer);
         console.log('waiting for next key');
@@ -90,8 +90,8 @@ ioHook.on('keyup', event => {
         // Fn key capture methohd.
         fnMethod(event);
     } else {
-        // caps or alt capture method.
-        capsOrAltMethod(event);
+        // caps capture method.
+        capsMethod(event);
     }
 });
 
