@@ -1,16 +1,23 @@
 {
   "name": "switch",
   "version": "1.0.0",
-  "description": "",
-  "main": "switch.js",
+  "description": "Switch between your favourite apps lightnen fast",
+  "main": "build/switch.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch-ts": "tsc -w",
+    "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\""
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Victor Aremu",
+  "license": "",
   "dependencies": {
     "iohook": "^0.6.1",
     "node-notifier": "^5.4.1",
-    "node-window-manager": "^1.0.4"
+    "node-window-manager": "^1.0.4",
+    "open": "^6.4.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.1",
+    "nodemon": "^1.15.1",
+    "typescript": "^3.5.3"
   }
 }
