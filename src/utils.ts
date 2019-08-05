@@ -48,15 +48,15 @@ export function registerNotifierOnClick()
 export function getHotApps(): SwitchHotApp[] {
     return [{
         name: 'Brave',
-        keycode: 2,
+        keycode: 11,
         path: 'C:\\Program Files (x86)\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
     }, {
         name: 'Code',
-        keycode: 3,
+        keycode: 10,
         path: 'C:\\Program Files\\Microsoft VS Code\\Code.exe'
     }, {
         name: 'MagicaVoxel',
-        keycode: 4,
+        keycode: 9,
         path: 'C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe'
     }];
 }

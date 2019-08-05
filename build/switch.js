@@ -4,21 +4,54 @@ const utils_1 = require("./utils");
 const text_1 = require("./text");
 const enums_1 = require("./enums");
 const ioHook = require('iohook');
+const checkcaps = require('check-caps');
+const secondKeyPressTimeout = 1000;
 const hotapps = utils_1.getHotApps();
 const alwaysMaximize = true;
-ioHook.on('keyup', event => {
-    if (event.altKey) {
-        let hotApp = utils_1.whichHotApp(event.keycode, hotapps);
-        if (hotApp) {
-            const processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
-            if (processes) {
-                utils_1.clearCurrentWidow();
-                utils_1.MakeHotAppActive(processes);
-            }
-            else {
-                utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.processNotFound(hotApp.name), hotApp: hotApp });
-            }
+const useFnKey = true;
+let timer = null;
+function react(event) {
+    let hotApp = utils_1.whichHotApp(event.keycode, hotapps);
+    if (hotApp) {
+        const processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
+        if (processes) {
+            utils_1.clearCurrentWidow();
+            utils_1.MakeHotAppActive(processes);
         }
+        else {
+            utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.processNotFound(hotApp.name), hotApp: hotApp });
+        }
+    }
+}
+function capsOrAltMethod(event) {
+    if (checkcaps.status() || event.altKey) {
+        react(event);
+    }
+}
+function fnMethod(event) {
+    if (timer != null) {
+        console.log('fn + ', event.keycode);
+        clearTimeout(timer);
+        timer = null;
+        react(event);
+    }
+    if (event.keycode == 0) {
+        if (timer != null)
+            clearTimeout(timer);
+        console.log('waiting for next key');
+        timer = setTimeout(() => {
+            console.log('timed out');
+            clearTimeout(timer);
+            timer = null;
+        }, secondKeyPressTimeout);
+    }
+}
+ioHook.on('keyup', event => {
+    if (useFnKey) {
+        fnMethod(event);
+    }
+    else {
+        capsOrAltMethod(event);
     }
 });
 ioHook.start();
