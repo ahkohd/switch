@@ -89,7 +89,7 @@ function fnMethod(event) {
 
 ioHook.on('keyup', event => {
     if (useFnKey) {
-        // Fn key capture methohd.
+        // Fn or Right Alt key capture methohd.
         fnMethod(event);
     } else {
         // caps capture method.
