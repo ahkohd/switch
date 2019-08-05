@@ -14,7 +14,7 @@ import TemplateText from './text';
 import { Switch } from './enums';
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
-const secondKeyPressTimeout = 600;
+const secondKeyPressTimeout = 700;
 
 const hotapps: SwitchHotApp[] = getHotApps();
 const alwaysMaximize = true;
