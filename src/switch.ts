@@ -1,7 +1,6 @@
 import {
     getHotApps,
     whichHotApp,
-    getAllProcessThatMatchPath,
     switchMessage,
     clearCurrentWidow,
     MakeHotAppActive,
@@ -14,7 +13,7 @@ import TemplateText from './text';
 import { Switch } from './enums';
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
-const secondKeyPressTimeout = 1000;
+const secondKeyPressTimeout = 600;
 
 const hotapps: SwitchHotApp[] = getHotApps();
 const alwaysMaximize = true;
