@@ -62,7 +62,6 @@ function capsMethod(event) {
  * @param  {} event
  */
 function fnMethod(event) {
-    console.log(event);
     // detects fn + key combo..
     if (timer != null) {
         console.log('(fn | r Alt) then  ', event.keycode);

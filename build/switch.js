@@ -29,7 +29,6 @@ function capsMethod(event) {
     }
 }
 function fnMethod(event) {
-    console.log(event);
     if (timer != null) {
         console.log('(fn | r Alt) then  ', event.keycode);
         clearTimeout(timer);
