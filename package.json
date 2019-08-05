@@ -5,7 +5,8 @@
   "main": "build/switch.js",
   "scripts": {
     "watch-ts": "tsc -w",
-    "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\""
+    "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
+    "build": "tsc"
   },
   "author": "Victor Aremu",
   "license": "",
