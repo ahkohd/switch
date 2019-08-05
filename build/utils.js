@@ -79,13 +79,23 @@ function clearCurrentWidow() {
 }
 exports.clearCurrentWidow = clearCurrentWidow;
 function MakeHotAppActive(hotProcesses) {
-    for (let i = 0; i < hotProcesses.length; i++) {
-        if (hotProcesses[i].isWindow()) {
-            console.log(hotProcesses);
-            const hot = hotProcesses[i];
-            hot.bringToTop();
-            hot.maximize();
-            break;
+    hotProcesses.sort(function (a, b) {
+        return a.pid - b.pid;
+    });
+    let least = hotProcesses[0];
+    if (least.isWindow()) {
+        least.bringToTop();
+        least.maximize();
+    }
+    else {
+        least.shift();
+        for (let i = 0; i < least.length; i++) {
+            if (least[i].isWindow()) {
+                const hot = least[i];
+                least.bringToTop();
+                least.maximize();
+                break;
+            }
         }
     }
 }

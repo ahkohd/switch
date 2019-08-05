@@ -59,7 +59,7 @@ export function getHotApps(): SwitchHotApp[] {
         name: 'MagicaVoxel',
         keycode: 4,
         path: 'C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe'
-    },{
+    }, {
         name: 'blender.exe',
         keycode: 5,
         path: 'C:\\Program Files (x86)\\Blender Foundation\\Blender'
@@ -121,20 +121,48 @@ export function clearCurrentWidow() {
  * @param  {} hotProcesses
  */
 
-export function MakeHotAppActive(hotProcesses) {
-    for (let i = 0; i < hotProcesses.length; i++) {
-        // Look for the first matched hot process that is a window
-        if (hotProcesses[i].isWindow()) {
-            console.log(hotProcesses);
-            // Then bring the window to the top.
-            const hot = hotProcesses[i];
-            hot.bringToTop();
-            // if (Switch.ALWAYS_MAXIMIZE_WINDOW == 1) {
-            // Maximize it
-            hot.maximize();
-            // }
-            break;
+// export function MakeHotAppActive(hotProcesses) {
+//     for (let i = 0; i < hotProcesses.length; i++) {
+//         // Look for the first matched hot process that is a window
+//         if (hotProcesses[i].isWindow()) {
+//             console.log(hotProcesses);
+//             // Then bring the window to the top.
+//             const hot = hotProcesses[i];
+//             hot.bringToTop();
+//             // if (Switch.ALWAYS_MAXIMIZE_WINDOW == 1) {
+//             // Maximize it
+//             hot.maximize();
+//             // }
+//             break;
+//         }
+//     }
+// }
+
+export function MakeHotAppActive(hotProcesses: any[]) {
+    // look for the least pid and is a window.
+    hotProcesses.sort(function (a, b) {
+        return a.pid - b.pid
+    });
+    // least pid 
+    let least = hotProcesses[0];
+    // if is a window, bring it up and make active
+    if (least.isWindow()) {
+        least.bringToTop();
+        least.maximize();
+    } else {
+        // else loop to the rest and find the 1st windowed process..
+        // remove the least one
+        least.shift();
+        for (let i = 0; i < least.length; i++) {
+            if (least[i].isWindow()) {
+                // Then bring the window to the top.
+                const hot = least[i];
+                least.bringToTop();
+                least.maximize();
+                break;
+            }
         }
+
     }
 }
 /**
