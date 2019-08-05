@@ -6,6 +6,7 @@ const childProcess = require('child_process');
 const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
+const blackList = ['explorer.exe'];
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -101,4 +102,17 @@ function debounce(callback, wait, immediate = false) {
         }
     };
 }
+function minimizeCurrentWindow() {
+    const current = windowManager.getActiveWindow();
+    const info = current.getInfo();
+    if (blackList.filter(item => info.path.includes(item)).length > 0) {
+        console.log('cannot minize');
+        return;
+    }
+    ;
+    if (current.isWindow()) {
+        current.minimize();
+    }
+}
+exports.minimizeCurrentWindow = minimizeCurrentWindow;
 //# sourceMappingURL=utils.js.map

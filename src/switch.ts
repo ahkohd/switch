@@ -5,7 +5,8 @@ import {
     clearCurrentWidow,
     MakeHotAppActive,
     getAllProcessThatMatchAppName,
-    registerNotifierOnClick
+    registerNotifierOnClick,
+    minimizeCurrentWindow
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -56,22 +57,25 @@ function capsMethod(event) {
 }
 
 /**
- * This methond activates hot app switch if user click (fn | l and r shift | l and r alt) key then the hot app code
+ * This methond activates hot app switch if user click (fn | r alt) key then the hot app code
  * and any key afterwards
  * @param  {} event
  */
 function fnMethod(event) {
+    console.log(event);
     // detects fn + key combo..
     if (timer != null) {
-        console.log('(fn | (l|r) Shift | (l|r) Alt) then  ', event.keycode);
+        console.log('(fn | r Alt) then  ', event.keycode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.keycode == 0 || event.keycode == 42 || event.keycode == 54 || event.keycode == 56 || event.keycode == 3640) {
+    if (event.keycode == 0  || event.keycode == 3640) {
         // fn key is pressed
         if (timer != null) clearTimeout(timer);
         console.log('waiting for next key');
+        // hide current window
+        minimizeCurrentWindow();
         timer = setTimeout(() => {
             console.log('timed out');
             clearTimeout(timer);

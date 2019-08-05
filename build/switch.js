@@ -29,16 +29,18 @@ function capsMethod(event) {
     }
 }
 function fnMethod(event) {
+    console.log(event);
     if (timer != null) {
-        console.log('(fn | (l|r) Shift | (l|r) Alt) then  ', event.keycode);
+        console.log('(fn | r Alt) then  ', event.keycode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.keycode == 0 || event.keycode == 42 || event.keycode == 54 || event.keycode == 56 || event.keycode == 3640) {
+    if (event.keycode == 0 || event.keycode == 3640) {
         if (timer != null)
             clearTimeout(timer);
         console.log('waiting for next key');
+        utils_1.minimizeCurrentWindow();
         timer = setTimeout(() => {
             console.log('timed out');
             clearTimeout(timer);

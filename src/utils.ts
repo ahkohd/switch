@@ -6,6 +6,8 @@ const open = require('open');
 
 const notifier = require('node-notifier');
 const path = require('path');
+const blackList = ['explorer.exe'];
+
 
 
 /**
@@ -29,8 +31,7 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
 }
 
 
-export function registerNotifierOnClick()
-{
+export function registerNotifierOnClick() {
     const onclick = debounce((notifierObject, options, event) => {
         // if hot app is present use its' path path property to open hot app.
         console.log(options.hotApp)
@@ -149,17 +150,32 @@ export function openHotApp(path: string) {
  * @param  {} immediate=false
  */
 function debounce(callback, wait, immediate = false) {
-    let timeout = null 
-    
-    return function() {
-      const callNow = immediate && !timeout
-      const next = () => callback.apply(this, arguments)
-      
-      clearTimeout(timeout)
-      timeout = setTimeout(next, wait)
-  
-      if (callNow) {
-        next()
-      }
+    let timeout = null
+
+    return function () {
+        const callNow = immediate && !timeout
+        const next = () => callback.apply(this, arguments)
+
+        clearTimeout(timeout)
+        timeout = setTimeout(next, wait)
+
+        if (callNow) {
+            next()
+        }
     }
-  }
+}
+
+/**
+ * Minimizes current window.
+ * Useful to prevent user from tying uncessary input..
+ */
+
+export function minimizeCurrentWindow() {
+    const current = windowManager.getActiveWindow();
+    const info = current.getInfo();
+    // prevent minizing black listed apps..
+    if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
+    if (current.isWindow()) {
+        current.minimize();
+    }
+}
