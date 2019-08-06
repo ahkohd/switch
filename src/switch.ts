@@ -21,7 +21,6 @@ const alwaysMaximize = true;
 const useFnKey = true;
 let timer = null;
 
-
 /**
  * Called to activate hot app switching
  * @param  {} event
@@ -106,5 +105,3 @@ ioHook.start(true);
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
-
-console.log("SWICTH SERVICE");

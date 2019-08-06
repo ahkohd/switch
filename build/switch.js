@@ -58,5 +58,4 @@ ioHook.on('keyup', event => {
 ioHook.start();
 ioHook.start(true);
 utils_1.registerNotifierOnClick();
-console.log("SWICTH SERVICE");
 //# sourceMappingURL=switch.js.map

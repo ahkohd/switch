@@ -6,8 +6,9 @@
   "scripts": {
     "watch-ts": "tsc -w",
     "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
-    "build": "tsc"
+    "build": "tsc  && pkg build/switch.js --output bin/switch --targets node10-win-x64,node10-linux-x64,node10-macos-x64  && node post-build.js"
   },
+  "bin": "$DIR/node_modules/npm/cli.js",
   "author": "Victor Aremu",
   "license": "",
   "dependencies": {
