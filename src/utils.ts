@@ -1,7 +1,7 @@
 import { SwitchNotiMessage, SwitchHotApp } from './interfaces';
 import { Switch } from './enums';
 const { windowManager } = require("node-window-manager");
-const childProcess = require('child_process');
+const fs = require('fs');
 const open = require('open');
 
 const notifier = require('node-notifier');
@@ -47,23 +47,8 @@ export function registerNotifierOnClick() {
  */
 
 export function getHotApps(): SwitchHotApp[] {
-    return [{
-        name: 'Brave',
-        keycode: 2,
-        path: 'C:\\Program Files (x86)\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
-    }, {
-        name: 'Code',
-        keycode: 3,
-        path: 'C:\\Program Files\\Microsoft VS Code\\Code.exe'
-    }, {
-        name: 'MagicaVoxel',
-        keycode: 4,
-        path: 'C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe'
-    }, {
-        name: 'blender.exe',
-        keycode: 5,
-        path: 'C:\\Program Files (x86)\\Blender Foundation\\Blender'
-    }];
+    let rawdata = fs.readFileSync(path.join(__dirname, 'switch.json'));
+    return JSON.parse(rawdata);
 }
 
 /**
@@ -118,25 +103,15 @@ export function clearCurrentWidow() {
 
 /**
  * Makes hot process that is a window active
- * @param  {} hotProcesses
+ * 1. gets the list of hot processes
+ * 2. sorts them in ascending order of their pid
+ * 3. checks if the least pid is a window
+ * 4. brings it to top
+ * 5. else looks next least pid that it a window in the list
+ * 6. the brings it to the top
+ * 
+ * @param  {} hotProcesses - List of matched hot processess
  */
-
-// export function MakeHotAppActive(hotProcesses) {
-//     for (let i = 0; i < hotProcesses.length; i++) {
-//         // Look for the first matched hot process that is a window
-//         if (hotProcesses[i].isWindow()) {
-//             console.log(hotProcesses);
-//             // Then bring the window to the top.
-//             const hot = hotProcesses[i];
-//             hot.bringToTop();
-//             // if (Switch.ALWAYS_MAXIMIZE_WINDOW == 1) {
-//             // Maximize it
-//             hot.maximize();
-//             // }
-//             break;
-//         }
-//     }
-// }
 
 export function MakeHotAppActive(hotProcesses: any[]) {
     // look for the least pid and is a window.

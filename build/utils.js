@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const enums_1 = require("./enums");
 const { windowManager } = require("node-window-manager");
-const childProcess = require('child_process');
+const fs = require('fs');
 const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
@@ -28,23 +28,8 @@ function registerNotifierOnClick() {
 }
 exports.registerNotifierOnClick = registerNotifierOnClick;
 function getHotApps() {
-    return [{
-            name: 'Brave',
-            keycode: 2,
-            path: 'C:\\Program Files (x86)\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
-        }, {
-            name: 'Code',
-            keycode: 3,
-            path: 'C:\\Program Files\\Microsoft VS Code\\Code.exe'
-        }, {
-            name: 'MagicaVoxel',
-            keycode: 4,
-            path: 'C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe'
-        }, {
-            name: 'blender.exe',
-            keycode: 5,
-            path: 'C:\\Program Files (x86)\\Blender Foundation\\Blender'
-        }];
+    let rawdata = fs.readFileSync(path.join(__dirname, 'switch.json'));
+    return JSON.parse(rawdata);
 }
 exports.getHotApps = getHotApps;
 function whichHotApp(keycode, hotApps) {

@@ -106,3 +106,5 @@ ioHook.start(true);
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
+
+console.log("SWICTH SERVICE");
