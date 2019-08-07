@@ -60,7 +60,9 @@ ioHook.on('keyup', event => {
 ioHook.start();
 ioHook.start(true);
 utils_1.registerNotifierOnClick();
-interChannel.emitter.on('update-hot-apps', (hotapps) => {
-    console.log('event recieved!', hotapps);
+interChannel.emitter.on('update-hot-apps', (happs) => {
+    hotapps = happs;
+    console.log('[info] Hot apps update recived');
+    utils_1.saveHotApps(happs);
 });
 //# sourceMappingURL=switch.js.map

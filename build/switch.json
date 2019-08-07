@@ -1,17 +1,1 @@
-[{
-    "name": "Brave",
-    "rawcode": 49,
-    "path": "C:\\Program Files (x86)\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
-}, {
-    "name": "Code.exe",
-    "rawcode": 50,
-    "path": "C:\\Program Files\\Microsoft VS Code\\Code.exe"
-}, {
-    "name": "MagicaVoxel",
-    "rawcode": 51,
-    "path": "C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe"
-}, {
-    "name": "blender.exe",
-    "rawcode": 52,
-    "path": "C:\\Program Files (x86)\\Blender Foundation\\Blender"
-}]
+[{"name":"Figma.exe","path":"C:\\Users\\victor\\AppData\\Local\\Figma\\Figma.exe","rawcode":49},{"name":"blender.exe","path":"C:\\Program Files (x86)\\Blender Foundation\\Blender\\blender.exe","rawcode":50},{"name":"Code.exe","path":"C:\\Program Files\\Microsoft VS Code\\Code.exe","rawcode":51},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null},{"name":"","path":"","rawcode":null}]

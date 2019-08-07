@@ -32,6 +32,14 @@ function getHotApps() {
     return JSON.parse(rawdata);
 }
 exports.getHotApps = getHotApps;
+function saveHotApps(data) {
+    fs.writeFile(path.join(__dirname, 'switch.json'), JSON.stringify(data), (err) => {
+        if (err)
+            throw err;
+        console.log('[info] Saved hot apps!');
+    });
+}
+exports.saveHotApps = saveHotApps;
 function whichHotApp(rawcode, hotApps) {
     let whichHotWindowToOpen = hotApps.filter(app => app.rawcode == rawcode);
     if (whichHotWindowToOpen.length == 0)

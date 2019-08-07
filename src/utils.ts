@@ -51,6 +51,16 @@ export function getHotApps(): SwitchHotApp[] {
     return JSON.parse(rawdata);
 }
 
+/*
+ * Saves hot app into persistent json file on disk
+ */
+export function saveHotApps(data) {
+    fs.writeFile(path.join(__dirname, 'switch.json'), JSON.stringify(data), (err) => {
+        if (err) throw err;
+        console.log('[info] Saved hot apps!');
+    });
+}
+
 /**
  * Returns a hot app that matches the given hot rawcode
  * @param  {number} rawcode
