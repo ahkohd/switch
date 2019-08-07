@@ -3,15 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 const text_1 = require("./text");
 const enums_1 = require("./enums");
+const interprocess_1 = require("./interprocess");
+const interChannel = new interprocess_1.InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 700;
-const hotapps = utils_1.getHotApps();
+let hotapps = utils_1.getHotApps();
 const alwaysMaximize = true;
 const useFnKey = true;
 let timer = null;
 function react(event) {
-    let hotApp = utils_1.whichHotApp(event.keycode, hotapps);
+    let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
     if (hotApp) {
         const processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
         if (processes) {
@@ -30,12 +32,12 @@ function capsMethod(event) {
 }
 function fnMethod(event) {
     if (timer != null) {
-        console.log('(fn | r Alt) then  ', event.keycode);
+        console.log('(fn | r Alt) then  ', event.rawcode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.rawcode == 255 || event.keycode == 3640) {
+    if (event.rawcode == 255 || event.rawcode == 165) {
         if (timer != null)
             clearTimeout(timer);
         console.log('waiting for next key');
@@ -58,4 +60,7 @@ ioHook.on('keyup', event => {
 ioHook.start();
 ioHook.start(true);
 utils_1.registerNotifierOnClick();
+interChannel.emitter.on('update-hot-apps', (hotapps) => {
+    console.log('event recieved!', hotapps);
+});
 //# sourceMappingURL=switch.js.map

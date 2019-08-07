@@ -14,6 +14,7 @@
   "dependencies": {
     "check-caps": "^1.0.3",
     "iohook": "^0.6.1",
+    "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",
     "node-window-manager": "^1.0.4",
     "open": "^6.4.0"

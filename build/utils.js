@@ -32,8 +32,8 @@ function getHotApps() {
     return JSON.parse(rawdata);
 }
 exports.getHotApps = getHotApps;
-function whichHotApp(keycode, hotApps) {
-    let whichHotWindowToOpen = hotApps.filter(app => app.keycode == keycode);
+function whichHotApp(rawcode, hotApps) {
+    let whichHotWindowToOpen = hotApps.filter(app => app.rawcode == rawcode);
     if (whichHotWindowToOpen.length == 0)
         return null;
     return whichHotWindowToOpen[0];

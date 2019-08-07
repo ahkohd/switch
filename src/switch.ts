@@ -12,11 +12,16 @@ import {
 import { SwitchHotApp } from './interfaces';
 import TemplateText from './text';
 import { Switch } from './enums';
+import { InterProcessChannel } from './interprocess';
+
+const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 700;
 
-const hotapps: SwitchHotApp[] = getHotApps();
+
+
+let hotapps: SwitchHotApp[] = getHotApps();
 const alwaysMaximize = true;
 const useFnKey = true;
 let timer = null;
@@ -27,9 +32,9 @@ let timer = null;
  */
 
 function react(event) {
-    let hotApp = whichHotApp(event.keycode, hotapps);
+    let hotApp = whichHotApp(event.rawcode, hotapps);
     if (hotApp) {
-        // If the hot app that match the keycode is found...
+        // If the hot app that match the rawcode is found...
         // get all process that match hot app's path
         const processes = getAllProcessThatMatchAppName(hotApp.name);
         if (processes) {
@@ -63,12 +68,12 @@ function capsMethod(event) {
 function fnMethod(event) {
     // detects fn + key combo..
     if (timer != null) {
-        console.log('(fn | r Alt) then  ', event.keycode);
+        console.log('(fn | r Alt) then  ', event.rawcode);
         clearTimeout(timer);
         timer = null;
         react(event);
     }
-    if (event.rawcode == 255  || event.keycode == 3640) {
+    if (event.rawcode == 255  || event.rawcode == 165) {
         // fn key is pressed
         if (timer != null) clearTimeout(timer);
         console.log('waiting for next key');
@@ -105,3 +110,8 @@ ioHook.start(true);
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
+
+
+interChannel.emitter.on('update-hot-apps', (hotapps)=>{
+    console.log('event recieved!', hotapps);
+})

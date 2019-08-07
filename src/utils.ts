@@ -52,14 +52,14 @@ export function getHotApps(): SwitchHotApp[] {
 }
 
 /**
- * Returns a hot app that matches the given hot keycode
- * @param  {number} keycode
+ * Returns a hot app that matches the given hot rawcode
+ * @param  {number} rawcode
  * @param  {SwitchHotApp[]} hotApps
  * @returns SwitchHotApp
  */
 
-export function whichHotApp(keycode: number, hotApps: SwitchHotApp[]): SwitchHotApp | null {
-    let whichHotWindowToOpen = hotApps.filter(app => app.keycode == keycode);
+export function whichHotApp(rawcode: number, hotApps: SwitchHotApp[]): SwitchHotApp | null {
+    let whichHotWindowToOpen = hotApps.filter(app => app.rawcode == rawcode);
     if (whichHotWindowToOpen.length == 0) return null;
     return whichHotWindowToOpen[0];
 }

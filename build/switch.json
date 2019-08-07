@@ -1,17 +1,17 @@
 [{
     "name": "Brave",
-    "keycode": 2,
+    "rawcode": 49,
     "path": "C:\\Program Files (x86)\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
 }, {
-    "name": "Code",
-    "keycode": 3,
+    "name": "Code.exe",
+    "rawcode": 50,
     "path": "C:\\Program Files\\Microsoft VS Code\\Code.exe"
 }, {
     "name": "MagicaVoxel",
-    "keycode": 4,
+    "rawcode": 51,
     "path": "C:\\Program Files\\MagicaVoxel-0.98.2-win\\MagicaVoxel.exe"
 }, {
     "name": "blender.exe",
-    "keycode": 5,
+    "rawcode": 52,
     "path": "C:\\Program Files (x86)\\Blender Foundation\\Blender"
 }]

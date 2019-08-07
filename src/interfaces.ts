@@ -11,6 +11,6 @@ export interface SwitchNotiMessage
 export interface SwitchHotApp
 {
     name: string,
-    keycode: number,
+    rawcode: number,
     path: string
 }
