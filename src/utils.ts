@@ -9,7 +9,6 @@ const path = require('path');
 const blackList = ['explorer.exe'];
 
 
-
 /**
  * Sends crossplatform notification to the user
  * @param  {Switch.ERROR_NOTI | Switch.INFO_NOTI} type Type of notification
@@ -79,8 +78,8 @@ export function whichHotApp(rawcode: number, hotApps: SwitchHotApp[]): SwitchHot
  * @param  {string} path
  * @returns Window
  */
-export function getAllProcessThatMatchPath(path: string) {
-    let processes = windowManager.getWindows().filter(window => window.path == path);
+export function getAllProcessThatMatchPath(_path: string) {
+    let processes = windowManager.getWindows().filter(window => path.basename(window.path) ==  path.basename(_path));
     if (processes == null || processes.length == 0) return null;
     return processes;
 }
@@ -126,8 +125,9 @@ export function clearCurrentWidow() {
 export function MakeHotAppActive(hotProcesses: any[]) {
     // look for the least pid and is a window.
     hotProcesses.sort(function (a, b) {
-        return a.pid - b.pid
+        return a.processId - b.processId
     });
+    console.log(hotProcesses);
     // least pid 
     let least = hotProcesses[0];
     // if is a window, bring it up and make active
@@ -197,3 +197,50 @@ export function minimizeCurrentWindow() {
         current.minimize();
     }
 }
+
+
+// Read all properties of the given file return them as a dictionary
+// export function getFileAttribute(fname)
+// {
+//     let propNames = ['Comments', 'InternalName', 'ProductName',
+//     'CompanyName', 'LegalCopyright', 'ProductVersion',
+//     'FileDescription', 'LegalTrademarks', 'PrivateBuild',
+//     'FileVersion', 'OriginalFilename', 'SpecialBuild'];
+//     let props = {'FixedFileInfo': null, 'StringFileInfo': null, 'FileVersion': null};
+//     try
+//     {
+//         // backslash as parm returns dictionary of numeric info corresponding to VS_FIXEDFILEINFO struc
+//         let fixedInfo = win32api.GetFileVersionInfo(fname, '\\');
+//         props['FixedFileInfo'] = fixedInfo;
+//         props['FileVersion'] = `${fixedInfo['FileVersionMS'] / 65536}.${fixedInfo['FileVersionMS'] % 65536}.${fixedInfo['FileVersionLS'] / 65536}.${fixedInfo['FileVersionLS'] % 65536}`;
+//         //  \VarFileInfo\Translation returns list of available (language, codepage)
+//         //  pairs that can be used to retreive string info. We are using only the first pair.
+//         let [lang, codepage] = win32api.GetFileVersionInfo(fname, '\\VarFileInfo\\Translation')[0];
+
+//         //  any other must be of the form \StringfileInfo\%04X%04X\parm_name, middle
+//         //  two are language/codepage pair returned from above
+
+//         let strInfo = {};
+//         for(let propName in propNames) {
+//             // let strInfoPath = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, propName)
+//             let strInfoPath = toUnicode(`\\StringFileInfo\\${lang}${codepage}\\${propName}`)
+//             //  print str_info
+//             strInfo[propName] = win32api.GetFileVersionInfo(fname, strInfoPath)
+//         }
+//         props['StringFileInfo'] = strInfo
+//     } catch(e)
+//     {
+//         console.log(e);
+//     }
+ 
+// }
+
+// export function toUnicode(str) {
+//     return str.split('').map(function (value, index, array) {
+//         var temp = value.charCodeAt(0).toString(16).toUpperCase();
+//         if (temp.length > 2) {
+//             return '\\u' + temp;
+//         }
+//         return value;
+//     }).join('');
+// }

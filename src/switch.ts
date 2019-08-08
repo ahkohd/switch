@@ -7,7 +7,8 @@ import {
     getAllProcessThatMatchAppName,
     registerNotifierOnClick,
     minimizeCurrentWindow,
-    saveHotApps
+    saveHotApps,
+    getAllProcessThatMatchPath
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -37,10 +38,12 @@ function react(event) {
     if (hotApp) {
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's path
-        const processes = getAllProcessThatMatchAppName(hotApp.name);
+        let processes = getAllProcessThatMatchPath(hotApp.path);
+        // then match by name..
+        processes = getAllProcessThatMatchAppName(hotApp.name);
         if (processes) {
             // Minimize current window
-            clearCurrentWidow();
+            minimizeCurrentWindow();
             // Make hotapp active
             MakeHotAppActive(processes);
         } else {

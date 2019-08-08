@@ -15,9 +15,10 @@ let timer = null;
 function react(event) {
     let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
     if (hotApp) {
-        const processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
+        let processes = utils_1.getAllProcessThatMatchPath(hotApp.path);
+        processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
         if (processes) {
-            utils_1.clearCurrentWidow();
+            utils_1.minimizeCurrentWindow();
             utils_1.MakeHotAppActive(processes);
         }
         else {

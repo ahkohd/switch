@@ -7,6 +7,7 @@ const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
 const blackList = ['explorer.exe'];
+const win32api = require('win32-api');
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -47,8 +48,8 @@ function whichHotApp(rawcode, hotApps) {
     return whichHotWindowToOpen[0];
 }
 exports.whichHotApp = whichHotApp;
-function getAllProcessThatMatchPath(path) {
-    let processes = windowManager.getWindows().filter(window => window.path == path);
+function getAllProcessThatMatchPath(_path) {
+    let processes = windowManager.getWindows().filter(window => path.basename(window.path) == path.basename(_path));
     if (processes == null || processes.length == 0)
         return null;
     return processes;
@@ -73,8 +74,9 @@ function clearCurrentWidow() {
 exports.clearCurrentWidow = clearCurrentWidow;
 function MakeHotAppActive(hotProcesses) {
     hotProcesses.sort(function (a, b) {
-        return a.pid - b.pid;
+        return a.processId - b.processId;
     });
+    console.log(hotProcesses);
     let least = hotProcesses[0];
     if (least.isWindow()) {
         least.bringToTop();
@@ -123,4 +125,37 @@ function minimizeCurrentWindow() {
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
+function getFileAttribute(fname) {
+    let propNames = ['Comments', 'InternalName', 'ProductName',
+        'CompanyName', 'LegalCopyright', 'ProductVersion',
+        'FileDescription', 'LegalTrademarks', 'PrivateBuild',
+        'FileVersion', 'OriginalFilename', 'SpecialBuild'];
+    let props = { 'FixedFileInfo': null, 'StringFileInfo': null, 'FileVersion': null };
+    try {
+        let fixedInfo = win32api.GetFileVersionInfo(fname, '\\');
+        props['FixedFileInfo'] = fixedInfo;
+        props['FileVersion'] = `${fixedInfo['FileVersionMS'] / 65536}.${fixedInfo['FileVersionMS'] % 65536}.${fixedInfo['FileVersionLS'] / 65536}.${fixedInfo['FileVersionLS'] % 65536}`;
+        let [lang, codepage] = win32api.GetFileVersionInfo(fname, '\\VarFileInfo\\Translation')[0];
+        let strInfo = {};
+        for (let propName in propNames) {
+            let strInfoPath = toUnicode(`\\StringFileInfo\\${lang}${codepage}\\${propName}`);
+            strInfo[propName] = win32api.GetFileVersionInfo(fname, strInfoPath);
+        }
+        props['StringFileInfo'] = strInfo;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+exports.getFileAttribute = getFileAttribute;
+function toUnicode(str) {
+    return str.split('').map(function (value, index, array) {
+        var temp = value.charCodeAt(0).toString(16).toUpperCase();
+        if (temp.length > 2) {
+            return '\\u' + temp;
+        }
+        return value;
+    }).join('');
+}
+exports.toUnicode = toUnicode;
 //# sourceMappingURL=utils.js.map
