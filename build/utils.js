@@ -12,7 +12,7 @@ function switchMessage(type, data) {
         title: 'Switch - ' + data.title,
         message: data.message,
         icon: path.join(enums_1.Switch.APP_PATH, enums_1.Switch.NOTI_ICON),
-        sound: true,
+        sound: false,
         wait: true,
         hotApp: (data.hotApp) ? data.hotApp : null
     });

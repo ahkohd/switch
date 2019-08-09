@@ -23,7 +23,7 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
             title: 'Switch - ' + data.title,
             message: data.message,
             icon: path.join(Switch.APP_PATH, Switch.NOTI_ICON), // Absolute path (doesn't work on balloons)
-            sound: true, // Only Notification Center or Windows Toasters
+            sound: false, // Only Notification Center or Windows Toasters
             wait: true, // Wait with callback, until user action is taken against notification
             hotApp: (data.hotApp) ? data.hotApp : null
         });

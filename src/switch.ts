@@ -36,24 +36,29 @@ let timer = null;
 
 function react(event) {
 
-        // hack to prevent user for typing number in application text field.
-        // robotjs.mouseClick('left',3 'double');
-
-        // robotjs.keyTap('backspace');
     let hotApp = whichHotApp(event.rawcode, hotapps);
     if (hotApp != null) {
+        // Minimize current window
+        minimizeCurrentWindow();
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's name and path
         let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
         console.log('matched windows', processes);
         if (processes) {
-            // Minimize current window
-            minimizeCurrentWindow();
+            // minimizeCurrentWindow();
             // Make hotapp active
             MakeHotAppActive(processes);
         } else {
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.processNotFound(hotApp.name), hotApp: hotApp });
         }
+    } else {
+        // if not hot app found make the client active..
+        if(event.rawcode >= 48 && event.rawcode <= 58)
+        {
+            makeClientActive(clientPID);
+            switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode-48), hotApp: hotApp });
+        }
+
     }
 }
 

@@ -16,14 +16,20 @@ let timer = null;
 function react(event) {
     let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
     if (hotApp != null) {
+        utils_1.minimizeCurrentWindow();
         let processes = utils_1.getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
         console.log('matched windows', processes);
         if (processes) {
-            utils_1.minimizeCurrentWindow();
             utils_1.MakeHotAppActive(processes);
         }
         else {
             utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.processNotFound(hotApp.name), hotApp: hotApp });
+        }
+    }
+    else {
+        if (event.rawcode >= 48 && event.rawcode <= 58) {
+            utils_1.makeClientActive(clientPID);
+            utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.noHotApp(event.rawcode - 48), hotApp: hotApp });
         }
     }
 }
