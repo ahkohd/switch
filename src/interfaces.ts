@@ -12,5 +12,6 @@ export interface SwitchHotApp
 {
     name: string,
     rawcode: number,
-    path: string
+    path: string,
+    pid: number
 }

@@ -1,14 +1,13 @@
 import {
-    getHotApps,
     whichHotApp,
     switchMessage,
     clearCurrentWidow,
+    saveHotApps,
     MakeHotAppActive,
     getAllProcessThatMatchAppName,
     registerNotifierOnClick,
     minimizeCurrentWindow,
-    saveHotApps,
-    getAllProcessThatMatchPath
+    getHotApps,
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -22,9 +21,8 @@ const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 700;
 
 
-
 let hotapps: SwitchHotApp[] = getHotApps();
-const alwaysMaximize = true;
+
 const useFnKey = true;
 let timer = null;
 
@@ -35,12 +33,11 @@ let timer = null;
 
 function react(event) {
     let hotApp = whichHotApp(event.rawcode, hotapps);
-    if (hotApp) {
+    if (hotApp != null) {
         // If the hot app that match the rawcode is found...
-        // get all process that match hot app's path
-        let processes = getAllProcessThatMatchPath(hotApp.path);
-        // then match by name..
-        processes = getAllProcessThatMatchAppName(hotApp.name);
+        // get all process that match hot app's name and path
+        let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
+        console.log('matched windows', processes);
         if (processes) {
             // Minimize current window
             minimizeCurrentWindow();
@@ -51,6 +48,7 @@ function react(event) {
         }
     }
 }
+
 
 /**
  * This method activates hot app switch if user turns on caps key
@@ -115,9 +113,9 @@ ioHook.start(true);
 // Registers the on toast click event handler.
 registerNotifierOnClick();
 
-
 interChannel.emitter.on('update-hot-apps', (happs)=>{
     hotapps = happs;
+    console.log(hotapps);
     console.log('[info] Hot apps update recived');
     saveHotApps(happs);
 })

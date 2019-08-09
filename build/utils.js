@@ -7,7 +7,6 @@ const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
 const blackList = ['explorer.exe'];
-const win32api = require('win32-api');
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -55,8 +54,16 @@ function getAllProcessThatMatchPath(_path) {
     return processes;
 }
 exports.getAllProcessThatMatchPath = getAllProcessThatMatchPath;
-function getAllProcessThatMatchAppName(name) {
-    let processes = windowManager.getWindows().filter(window => window.getTitle().includes(name));
+function getProcessWithPID(pid) {
+    console.log(pid);
+    let process = windowManager.getWindows().filter(window => window.processId == pid);
+    if (process.length == 0)
+        return null;
+    return process[0];
+}
+exports.getProcessWithPID = getProcessWithPID;
+function getAllProcessThatMatchAppName(name, path) {
+    let processes = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace('_', ' ')) && window.path.toLowerCase() == path.toLowerCase());
     if (processes == null || processes.length == 0)
         return null;
     return processes;
@@ -74,7 +81,7 @@ function clearCurrentWidow() {
 exports.clearCurrentWidow = clearCurrentWidow;
 function MakeHotAppActive(hotProcesses) {
     hotProcesses.sort(function (a, b) {
-        return a.processId - b.processId;
+        return b.processId - a.processId;
     });
     console.log(hotProcesses);
     let least = hotProcesses[0];
@@ -83,20 +90,21 @@ function MakeHotAppActive(hotProcesses) {
         least.maximize();
     }
     else {
+        least = hotProcesses;
         least.shift();
         for (let i = 0; i < least.length; i++) {
             if (least[i].isWindow()) {
                 const hot = least[i];
-                least.bringToTop();
-                least.maximize();
+                hot.bringToTop();
+                hot.maximize();
                 break;
             }
         }
     }
+    minimizeAllHotAppsExceptCurrentHotApp(least);
 }
 exports.MakeHotAppActive = MakeHotAppActive;
 function openHotApp(path) {
-    console.log('ppp', path);
     open(path);
 }
 exports.openHotApp = openHotApp;
@@ -122,40 +130,11 @@ function minimizeCurrentWindow() {
     ;
     if (current.isWindow()) {
         current.minimize();
+        current.show();
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
-function getFileAttribute(fname) {
-    let propNames = ['Comments', 'InternalName', 'ProductName',
-        'CompanyName', 'LegalCopyright', 'ProductVersion',
-        'FileDescription', 'LegalTrademarks', 'PrivateBuild',
-        'FileVersion', 'OriginalFilename', 'SpecialBuild'];
-    let props = { 'FixedFileInfo': null, 'StringFileInfo': null, 'FileVersion': null };
-    try {
-        let fixedInfo = win32api.GetFileVersionInfo(fname, '\\');
-        props['FixedFileInfo'] = fixedInfo;
-        props['FileVersion'] = `${fixedInfo['FileVersionMS'] / 65536}.${fixedInfo['FileVersionMS'] % 65536}.${fixedInfo['FileVersionLS'] / 65536}.${fixedInfo['FileVersionLS'] % 65536}`;
-        let [lang, codepage] = win32api.GetFileVersionInfo(fname, '\\VarFileInfo\\Translation')[0];
-        let strInfo = {};
-        for (let propName in propNames) {
-            let strInfoPath = toUnicode(`\\StringFileInfo\\${lang}${codepage}\\${propName}`);
-            strInfo[propName] = win32api.GetFileVersionInfo(fname, strInfoPath);
-        }
-        props['StringFileInfo'] = strInfo;
-    }
-    catch (e) {
-        console.log(e);
-    }
+function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp) {
 }
-exports.getFileAttribute = getFileAttribute;
-function toUnicode(str) {
-    return str.split('').map(function (value, index, array) {
-        var temp = value.charCodeAt(0).toString(16).toUpperCase();
-        if (temp.length > 2) {
-            return '\\u' + temp;
-        }
-        return value;
-    }).join('');
-}
-exports.toUnicode = toUnicode;
+exports.minimizeAllHotAppsExceptCurrentHotApp = minimizeAllHotAppsExceptCurrentHotApp;
 //# sourceMappingURL=utils.js.map

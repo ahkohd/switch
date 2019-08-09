@@ -84,19 +84,25 @@ export function getAllProcessThatMatchPath(_path: string) {
     return processes;
 }
 
+export function getProcessWithPID(pid: number)
+{
+
+    console.log(pid)
+    let process = windowManager.getWindows().filter(window => window.processId == pid);
+    if(process.length == 0) return null;
+    return process[0];
+}
 
 /**
  * Returns all processes that matches the specified app name
  * @param  {string} name
  * @returns Window
  */
-
-export function getAllProcessThatMatchAppName(name: string) {
-    let processes = windowManager.getWindows().filter(window => window.getTitle().includes(name));
+export function getAllProcessThatMatchAppName(name: string, path: string) {
+    let processes = windowManager.getWindows().filter(window=>window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace('_', ' ')) && window.path.toLowerCase() == path.toLowerCase());
     if (processes == null || processes.length == 0) return null;
     return processes;
 }
-
 
 /**
  * Minimize current window
@@ -125,7 +131,7 @@ export function clearCurrentWidow() {
 export function MakeHotAppActive(hotProcesses: any[]) {
     // look for the least pid and is a window.
     hotProcesses.sort(function (a, b) {
-        return a.processId - b.processId
+        return b.processId - a.processId
     });
     console.log(hotProcesses);
     // least pid 
@@ -137,27 +143,29 @@ export function MakeHotAppActive(hotProcesses: any[]) {
     } else {
         // else loop to the rest and find the 1st windowed process..
         // remove the least one
+        least  = hotProcesses;
         least.shift();
         for (let i = 0; i < least.length; i++) {
             if (least[i].isWindow()) {
                 // Then bring the window to the top.
                 const hot = least[i];
-                least.bringToTop();
-                least.maximize();
+                hot.bringToTop();
+                hot.maximize();
                 break;
             }
         }
 
     }
+
+    minimizeAllHotAppsExceptCurrentHotApp(least);
 }
+
 /**
  * Opens a hotApp with the provided path
  * @param  {string} path
  */
 export function openHotApp(path: string) {
-    console.log('ppp', path);
     open(path);
-
 }
 
 /**
@@ -195,52 +203,25 @@ export function minimizeCurrentWindow() {
     if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
     if (current.isWindow()) {
         current.minimize();
+        current.show();
     }
 }
 
-
-// Read all properties of the given file return them as a dictionary
-// export function getFileAttribute(fname)
-// {
-//     let propNames = ['Comments', 'InternalName', 'ProductName',
-//     'CompanyName', 'LegalCopyright', 'ProductVersion',
-//     'FileDescription', 'LegalTrademarks', 'PrivateBuild',
-//     'FileVersion', 'OriginalFilename', 'SpecialBuild'];
-//     let props = {'FixedFileInfo': null, 'StringFileInfo': null, 'FileVersion': null};
-//     try
-//     {
-//         // backslash as parm returns dictionary of numeric info corresponding to VS_FIXEDFILEINFO struc
-//         let fixedInfo = win32api.GetFileVersionInfo(fname, '\\');
-//         props['FixedFileInfo'] = fixedInfo;
-//         props['FileVersion'] = `${fixedInfo['FileVersionMS'] / 65536}.${fixedInfo['FileVersionMS'] % 65536}.${fixedInfo['FileVersionLS'] / 65536}.${fixedInfo['FileVersionLS'] % 65536}`;
-//         //  \VarFileInfo\Translation returns list of available (language, codepage)
-//         //  pairs that can be used to retreive string info. We are using only the first pair.
-//         let [lang, codepage] = win32api.GetFileVersionInfo(fname, '\\VarFileInfo\\Translation')[0];
-
-//         //  any other must be of the form \StringfileInfo\%04X%04X\parm_name, middle
-//         //  two are language/codepage pair returned from above
-
-//         let strInfo = {};
-//         for(let propName in propNames) {
-//             // let strInfoPath = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, propName)
-//             let strInfoPath = toUnicode(`\\StringFileInfo\\${lang}${codepage}\\${propName}`)
-//             //  print str_info
-//             strInfo[propName] = win32api.GetFileVersionInfo(fname, strInfoPath)
-//         }
-//         props['StringFileInfo'] = strInfo
-//     } catch(e)
-//     {
-//         console.log(e);
-//     }
- 
-// }
-
-// export function toUnicode(str) {
-//     return str.split('').map(function (value, index, array) {
-//         var temp = value.charCodeAt(0).toString(16).toUpperCase();
-//         if (temp.length > 2) {
-//             return '\\u' + temp;
-//         }
-//         return value;
-//     }).join('');
-// }
+export function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp)
+{
+    // also minize all windows in hot apps..
+    // const hotApps = getHotApps().filter(hot=>hot.path.toLowerCase()!=currentHotApp.path.toLowerCase());
+    // console.log(hotApps);
+    // hotApps.forEach(app=>{
+    //     let windows = getAllProcessThatMatchAppName(app.name, app.path);
+    //     if(windows !== null)
+    //     {
+    //         windows.forEach(window=>{
+    //             if(window.isWindow())
+    //             {
+    //                 window.minimize();
+    //             }
+    //         });
+    //     }
+    // })
+}

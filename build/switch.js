@@ -9,14 +9,13 @@ const ioHook = require('iohook');
 const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 700;
 let hotapps = utils_1.getHotApps();
-const alwaysMaximize = true;
 const useFnKey = true;
 let timer = null;
 function react(event) {
     let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
-    if (hotApp) {
-        let processes = utils_1.getAllProcessThatMatchPath(hotApp.path);
-        processes = utils_1.getAllProcessThatMatchAppName(hotApp.name);
+    if (hotApp != null) {
+        let processes = utils_1.getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
+        console.log('matched windows', processes);
         if (processes) {
             utils_1.minimizeCurrentWindow();
             utils_1.MakeHotAppActive(processes);
@@ -63,6 +62,7 @@ ioHook.start(true);
 utils_1.registerNotifierOnClick();
 interChannel.emitter.on('update-hot-apps', (happs) => {
     hotapps = happs;
+    console.log(hotapps);
     console.log('[info] Hot apps update recived');
     utils_1.saveHotApps(happs);
 });
