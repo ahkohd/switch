@@ -18,7 +18,7 @@ import { InterProcessChannel } from './interprocess';
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
-const secondKeyPressTimeout = 700;
+const secondKeyPressTimeout = 600;
 
 
 let hotapps: SwitchHotApp[] = getHotApps();
