@@ -128,7 +128,7 @@ export function clearCurrentWidow() {
  * @param  {} hotProcesses - List of matched hot processess
  */
 
-export function MakeHotAppActive(hotProcesses: any[]) {
+export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) {
     // look for the least pid and is a window.
     hotProcesses.sort(function (a, b) {
         return b.processId - a.processId
@@ -139,7 +139,7 @@ export function MakeHotAppActive(hotProcesses: any[]) {
     // if is a window, bring it up and make active
     if (least.isWindow()) {
         least.bringToTop();
-        least.maximize();
+        if(maximize) least.maximize();
     } else {
         // else loop to the rest and find the 1st windowed process..
         // remove the least one
@@ -156,8 +156,6 @@ export function MakeHotAppActive(hotProcesses: any[]) {
         }
 
     }
-
-    minimizeAllHotAppsExceptCurrentHotApp(least);
 }
 
 /**
@@ -203,7 +201,6 @@ export function minimizeCurrentWindow() {
     if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
     if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
-        current.show();
     }
 }
 
@@ -214,24 +211,6 @@ export function makeClientActive(pid: number | null)
     const getSwitchWindow = windowManager.getWindows().filter(win=>win.processId == pid);
     if(getSwitchWindow.length != 0)
     {
-        MakeHotAppActive(getSwitchWindow);
+        MakeHotAppActive(getSwitchWindow, false);
     }
-}
-export function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp)
-{
-    // also minize all windows in hot apps..
-    // const hotApps = getHotApps().filter(hot=>hot.path.toLowerCase()!=currentHotApp.path.toLowerCase());
-    // console.log(hotApps);
-    // hotApps.forEach(app=>{
-    //     let windows = getAllProcessThatMatchAppName(app.name, app.path);
-    //     if(windows !== null)
-    //     {
-    //         windows.forEach(window=>{
-    //             if(window.isWindow())
-    //             {
-    //                 window.minimize();
-    //             }
-    //         });
-    //     }
-    // })
 }

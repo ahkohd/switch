@@ -15,6 +15,7 @@ import { SwitchHotApp } from './interfaces';
 import TemplateText from './text';
 import { Switch } from './enums';
 import { InterProcessChannel } from './interprocess';
+const robotjs = require('robotjs');
 
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
@@ -34,6 +35,11 @@ let timer = null;
  */
 
 function react(event) {
+
+        // hack to prevent user for typing number in application text field.
+        // robotjs.mouseClick('left',3 'double');
+
+        // robotjs.keyTap('backspace');
     let hotApp = whichHotApp(event.rawcode, hotapps);
     if (hotApp != null) {
         // If the hot app that match the rawcode is found...
@@ -70,27 +76,13 @@ function capsMethod(event) {
  * @param  {} event
  */
 function fnMethod(event) {
-    // detects fn + key combo..
-    if (timer != null) {
-        console.log('(fn | r Alt) then  ', event.rawcode);
-        clearTimeout(timer);
-        timer = null;
+    if (event.altKey) {
         react(event);
     }
-    if (event.rawcode == 255  || event.rawcode == 165) {
-        // fn key is pressed
-        if (timer != null) clearTimeout(timer);
-        console.log('waiting for next key');
-        makeClientActive(clientPID);
-        // hide current window
-        minimizeCurrentWindow();
-        timer = setTimeout(() => {
-            console.log('timed out');
-            clearTimeout(timer);
-            timer = null;
-        }, secondKeyPressTimeout);
-    }
 }
+
+
+
 
 /*
  * Fires when on user's keyup
@@ -116,7 +108,7 @@ ioHook.start(true);
 // Registers the on toast click event handler.
 registerNotifierOnClick();
 
-interChannel.emitter.on('update-hot-apps', (happs)=>{
+interChannel.emitter.on('update-hot-apps', (happs) => {
     hotapps = happs;
     console.log(hotapps);
     console.log('[info] Hot apps update recived');
@@ -124,7 +116,7 @@ interChannel.emitter.on('update-hot-apps', (happs)=>{
 })
 
 
-interChannel.emitter.on('client-pid', (pid)=>{
+interChannel.emitter.on('client-pid', (pid) => {
     clientPID = pid;
-    console.log('[info] Hot client pid: '+pid);
+    console.log('[info] Hot client pid: ' + pid);
 })

@@ -4,6 +4,7 @@ const utils_1 = require("./utils");
 const text_1 = require("./text");
 const enums_1 = require("./enums");
 const interprocess_1 = require("./interprocess");
+const robotjs = require('robotjs');
 const interChannel = new interprocess_1.InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
@@ -32,23 +33,8 @@ function capsMethod(event) {
     }
 }
 function fnMethod(event) {
-    if (timer != null) {
-        console.log('(fn | r Alt) then  ', event.rawcode);
-        clearTimeout(timer);
-        timer = null;
+    if (event.altKey) {
         react(event);
-    }
-    if (event.rawcode == 255 || event.rawcode == 165) {
-        if (timer != null)
-            clearTimeout(timer);
-        console.log('waiting for next key');
-        utils_1.makeClientActive(clientPID);
-        utils_1.minimizeCurrentWindow();
-        timer = setTimeout(() => {
-            console.log('timed out');
-            clearTimeout(timer);
-            timer = null;
-        }, secondKeyPressTimeout);
     }
 }
 ioHook.on('keyup', event => {

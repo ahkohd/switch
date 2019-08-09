@@ -79,7 +79,7 @@ function clearCurrentWidow() {
     }
 }
 exports.clearCurrentWidow = clearCurrentWidow;
-function MakeHotAppActive(hotProcesses) {
+function MakeHotAppActive(hotProcesses, maximize = true) {
     hotProcesses.sort(function (a, b) {
         return b.processId - a.processId;
     });
@@ -87,7 +87,8 @@ function MakeHotAppActive(hotProcesses) {
     let least = hotProcesses[0];
     if (least.isWindow()) {
         least.bringToTop();
-        least.maximize();
+        if (maximize)
+            least.maximize();
     }
     else {
         least = hotProcesses;
@@ -101,7 +102,6 @@ function MakeHotAppActive(hotProcesses) {
             }
         }
     }
-    minimizeAllHotAppsExceptCurrentHotApp(least);
 }
 exports.MakeHotAppActive = MakeHotAppActive;
 function openHotApp(path) {
@@ -130,7 +130,6 @@ function minimizeCurrentWindow() {
     ;
     if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
-        current.show();
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
@@ -139,11 +138,8 @@ function makeClientActive(pid) {
         return;
     const getSwitchWindow = windowManager.getWindows().filter(win => win.processId == pid);
     if (getSwitchWindow.length != 0) {
-        MakeHotAppActive(getSwitchWindow);
+        MakeHotAppActive(getSwitchWindow, false);
     }
 }
 exports.makeClientActive = makeClientActive;
-function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp) {
-}
-exports.minimizeAllHotAppsExceptCurrentHotApp = minimizeAllHotAppsExceptCurrentHotApp;
 //# sourceMappingURL=utils.js.map
