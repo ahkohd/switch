@@ -201,12 +201,22 @@ export function minimizeCurrentWindow() {
     const info = current.getInfo();
     // prevent minizing black listed apps..
     if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
-    if (current.isWindow()) {
+    if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
         current.show();
     }
 }
 
+
+export function makeClientActive(pid: number | null)
+{
+    if(pid == null) return;
+    const getSwitchWindow = windowManager.getWindows().filter(win=>win.processId == pid);
+    if(getSwitchWindow.length != 0)
+    {
+        MakeHotAppActive(getSwitchWindow);
+    }
+}
 export function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp)
 {
     // also minize all windows in hot apps..

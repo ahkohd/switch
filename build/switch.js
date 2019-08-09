@@ -8,6 +8,7 @@ const interChannel = new interprocess_1.InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 600;
+let clientPID = null;
 let hotapps = utils_1.getHotApps();
 const useFnKey = true;
 let timer = null;
@@ -41,6 +42,7 @@ function fnMethod(event) {
         if (timer != null)
             clearTimeout(timer);
         console.log('waiting for next key');
+        utils_1.makeClientActive(clientPID);
         utils_1.minimizeCurrentWindow();
         timer = setTimeout(() => {
             console.log('timed out');
@@ -65,5 +67,9 @@ interChannel.emitter.on('update-hot-apps', (happs) => {
     console.log(hotapps);
     console.log('[info] Hot apps update recived');
     utils_1.saveHotApps(happs);
+});
+interChannel.emitter.on('client-pid', (pid) => {
+    clientPID = pid;
+    console.log('[info] Hot client pid: ' + pid);
 });
 //# sourceMappingURL=switch.js.map

@@ -19,6 +19,8 @@ class InterProcessChannel {
                 case 'update-hot-apps':
                     this.emitter.emit('update-hot-apps', msg.data);
                     break;
+                case 'client-pid':
+                    this.emitter.emit('client-pid', msg.data);
             }
         }));
     }

@@ -8,6 +8,7 @@ import {
     registerNotifierOnClick,
     minimizeCurrentWindow,
     getHotApps,
+    makeClientActive,
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -19,6 +20,7 @@ const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
 const secondKeyPressTimeout = 600;
+let clientPID = null;
 
 
 let hotapps: SwitchHotApp[] = getHotApps();
@@ -79,6 +81,7 @@ function fnMethod(event) {
         // fn key is pressed
         if (timer != null) clearTimeout(timer);
         console.log('waiting for next key');
+        makeClientActive(clientPID);
         // hide current window
         minimizeCurrentWindow();
         timer = setTimeout(() => {
@@ -118,4 +121,10 @@ interChannel.emitter.on('update-hot-apps', (happs)=>{
     console.log(hotapps);
     console.log('[info] Hot apps update recived');
     saveHotApps(happs);
+})
+
+
+interChannel.emitter.on('client-pid', (pid)=>{
+    clientPID = pid;
+    console.log('[info] Hot client pid: '+pid);
 })

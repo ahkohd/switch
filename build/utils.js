@@ -128,12 +128,21 @@ function minimizeCurrentWindow() {
         return;
     }
     ;
-    if (current.isWindow()) {
+    if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
         current.show();
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
+function makeClientActive(pid) {
+    if (pid == null)
+        return;
+    const getSwitchWindow = windowManager.getWindows().filter(win => win.processId == pid);
+    if (getSwitchWindow.length != 0) {
+        MakeHotAppActive(getSwitchWindow);
+    }
+}
+exports.makeClientActive = makeClientActive;
 function minimizeAllHotAppsExceptCurrentHotApp(currentHotApp) {
 }
 exports.minimizeAllHotAppsExceptCurrentHotApp = minimizeAllHotAppsExceptCurrentHotApp;
