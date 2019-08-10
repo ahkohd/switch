@@ -29,6 +29,9 @@ class InterProcessChannel {
     sendShowClient() {
         ipc.server.emit(socket, 'client-show', { show: true });
     }
+    sendlastSwitched(app) {
+        ipc.server.emit(socket, 'last-switched-app', { data: app });
+    }
 }
 exports.InterProcessChannel = InterProcessChannel;
 //# sourceMappingURL=Interprocess.js.map

@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import { SwitchHotApp } from "./interfaces";
 
 const ipc = require('node-ipc');
 
@@ -45,5 +46,10 @@ export class InterProcessChannel {
     sendShowClient()
     {
         ipc.server.emit(socket, 'client-show', {show: true});   
+    }
+
+    sendlastSwitched(app: SwitchHotApp)
+    {
+        ipc.server.emit(socket, 'last-switched-app', {data: app});
     }
 }

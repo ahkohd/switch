@@ -21,6 +21,7 @@ function react(event) {
         console.log('matched windows', processes);
         if (processes) {
             utils_1.MakeHotAppActive(processes);
+            interChannel.sendlastSwitched(hotApp);
         }
         else {
             utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.processNotFound(hotApp.name), hotApp: hotApp });

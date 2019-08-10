@@ -49,6 +49,7 @@ function react(event) {
             // minimizeCurrentWindow();
             // Make hotapp active
             MakeHotAppActive(processes);
+            interChannel.sendlastSwitched(hotApp);
         } else {
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.processNotFound(hotApp.name), hotApp: hotApp });
         }
