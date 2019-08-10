@@ -28,7 +28,6 @@ function react(event) {
     }
     else {
         if (event.rawcode >= 48 && event.rawcode <= 58) {
-            utils_1.makeClientActive(clientPID);
             utils_1.switchMessage(enums_1.Switch.ERROR_NOTI, { title: text_1.default.errorTitle, message: text_1.default.noHotApp(event.rawcode - 48), hotApp: hotApp });
         }
     }
@@ -49,6 +48,11 @@ ioHook.on('keyup', event => {
     }
     else {
         capsMethod(event);
+    }
+});
+ioHook.on('keydown', event => {
+    if (event.altKey) {
+        interChannel.sendShowClient();
     }
 });
 ioHook.start();

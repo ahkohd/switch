@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 
 const ipc = require('node-ipc');
 
+let socket;
 export interface ProcessMessage
 {
     type: string,
@@ -27,7 +28,8 @@ export class InterProcessChannel {
         ipc.config.id = 'switch-service-channel';
         ipc.config.retry = 1500;
         ipc.config.silent = true;
-        ipc.serve(() => ipc.server.on('switch-service-incoming', (message) => {
+        ipc.serve(() => ipc.server.on('switch-service-incoming', (message, _socket) => {
+            socket = _socket;
             const msg: ProcessMessage = JSON.parse(message);
             switch(msg.type)
             {
@@ -38,5 +40,10 @@ export class InterProcessChannel {
                     this.emitter.emit('client-pid', msg.data);
             }
         }));
+    }
+
+    sendShowClient()
+    {
+        ipc.server.emit(socket, 'client-show', {show: true});   
     }
 }

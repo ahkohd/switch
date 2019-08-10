@@ -173,7 +173,7 @@ export function openHotApp(path: string) {
  * @param  {} wait
  * @param  {} immediate=false
  */
-function debounce(callback, wait, immediate = false) {
+export function debounce(callback, wait, immediate = false) {
     let timeout = null
 
     return function () {

@@ -120,6 +120,7 @@ function debounce(callback, wait, immediate = false) {
         }
     };
 }
+exports.debounce = debounce;
 function minimizeCurrentWindow() {
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();

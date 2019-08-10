@@ -56,7 +56,7 @@ function react(event) {
         // if not hot app found make the client active..
         if(event.rawcode >= 48 && event.rawcode <= 58)
         {
-            makeClientActive(clientPID);
+            // makeClientActive(clientPID);
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode-48), hotApp: hotApp });
         }
 
@@ -102,6 +102,13 @@ ioHook.on('keyup', event => {
     } else {
         // caps capture method.
         capsMethod(event);
+    }
+});
+
+
+ioHook.on('keydown', event => {
+    if (event.altKey) {
+        interChannel.sendShowClient();
     }
 });
 

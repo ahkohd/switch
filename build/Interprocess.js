@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 const ipc = require('node-ipc');
+let socket;
 class InterProcessChannel {
     constructor() {
         this.emitter = new events_1.EventEmitter();
@@ -13,7 +14,8 @@ class InterProcessChannel {
         ipc.config.id = 'switch-service-channel';
         ipc.config.retry = 1500;
         ipc.config.silent = true;
-        ipc.serve(() => ipc.server.on('switch-service-incoming', (message) => {
+        ipc.serve(() => ipc.server.on('switch-service-incoming', (message, _socket) => {
+            socket = _socket;
             const msg = JSON.parse(message);
             switch (msg.type) {
                 case 'update-hot-apps':
@@ -23,6 +25,9 @@ class InterProcessChannel {
                     this.emitter.emit('client-pid', msg.data);
             }
         }));
+    }
+    sendShowClient() {
+        ipc.server.emit(socket, 'client-show', { show: true });
     }
 }
 exports.InterProcessChannel = InterProcessChannel;
