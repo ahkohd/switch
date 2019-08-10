@@ -50,6 +50,6 @@ export class InterProcessChannel {
 
     sendlastSwitched(app: SwitchHotApp)
     {
-        ipc.server.emit(socket, 'last-switched-app', {data: app});
+        ipc.server.emit(socket, 'last-switched-app', {hotApp: app});
     }
 }
