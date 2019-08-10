@@ -15,7 +15,6 @@ import { SwitchHotApp } from './interfaces';
 import TemplateText from './text';
 import { Switch } from './enums';
 import { InterProcessChannel } from './interprocess';
-const robotjs = require('robotjs');
 
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');

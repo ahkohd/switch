@@ -4,7 +4,6 @@ const utils_1 = require("./utils");
 const text_1 = require("./text");
 const enums_1 = require("./enums");
 const interprocess_1 = require("./interprocess");
-const robotjs = require('robotjs');
 const interChannel = new interprocess_1.InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
