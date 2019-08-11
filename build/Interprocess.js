@@ -23,6 +23,11 @@ class InterProcessChannel {
                     break;
                 case 'client-pid':
                     this.emitter.emit('client-pid', msg.data);
+                    break;
+                case 'show-dock':
+                    console.log('[info] Show dock');
+                    this.sendShowClient();
+                    break;
             }
         }));
     }
