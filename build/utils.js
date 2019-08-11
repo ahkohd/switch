@@ -64,8 +64,16 @@ function getProcessWithPID(pid) {
 exports.getProcessWithPID = getProcessWithPID;
 function getAllProcessThatMatchAppName(name, path) {
     let processes = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')) && window.path.toLowerCase() == path.toLowerCase());
-    if (processes == null || processes.length == 0)
-        return null;
+    if (processes == null || processes.length == 0) {
+        let p = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+        if (p.length == 0) {
+            return null;
+        }
+        else {
+            return p;
+        }
+    }
+    ;
     return processes;
 }
 exports.getAllProcessThatMatchAppName = getAllProcessThatMatchAppName;
