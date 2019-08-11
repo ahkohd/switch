@@ -22,7 +22,7 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
         {
             title: 'Switch - ' + data.title,
             message: data.message,
-            icon: path.join(Switch.APP_PATH, Switch.NOTI_ICON), // Absolute path (doesn't work on balloons)
+            icon: path.join(__dirname, 'img', 'switch.png'), // Absolute path (doesn't work on balloons)
             sound: false, // Only Notification Center or Windows Toasters
             wait: true, // Wait with callback, until user action is taken against notification
             hotApp: (data.hotApp) ? data.hotApp : null
@@ -94,22 +94,26 @@ export function getProcessWithPID(pid: number)
 }
 
 /**
- * Returns all processes that matches the specified app name
+ * Returns all processes that matches specified process name and path, if it only
+ * matches name, it returns it else null
  * @param  {string} name
- * @returns Window
+ * @returns Window[] | null
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
-    let processes = windowManager.getWindows().filter(window=>window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')) && window.path.toLowerCase() == path.toLowerCase());
-    if (processes == null || processes.length == 0) {
-        let p = windowManager.getWindows().filter(window=>window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
-        if(p.length == 0)
+
+    const filterProcessByname = windowManager.getWindows().filter(window=>window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    if(filterProcessByname == null || filterProcessByname.length == 0)
+    {
+        return null;
+    } else {
+        const filterProcessByPath = filterProcessByname.filter(window=> window.path.toLowerCase() == path.toLowerCase());
+        if(filterProcessByPath == null || filterProcessByPath.length == 0)
         {
-            return null
+            return filterProcessByname;
         } else {
-            return p;
+            return filterProcessByPath;
         }
-    };
-    return processes;
+    }
 }
 
 /** 

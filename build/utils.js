@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const enums_1 = require("./enums");
 const { windowManager } = require("node-window-manager");
 const fs = require('fs');
 const open = require('open');
@@ -11,7 +10,7 @@ function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
         message: data.message,
-        icon: path.join(enums_1.Switch.APP_PATH, enums_1.Switch.NOTI_ICON),
+        icon: path.join(__dirname, 'img', 'switch.png'),
         sound: false,
         wait: true,
         hotApp: (data.hotApp) ? data.hotApp : null
@@ -63,18 +62,19 @@ function getProcessWithPID(pid) {
 }
 exports.getProcessWithPID = getProcessWithPID;
 function getAllProcessThatMatchAppName(name, path) {
-    let processes = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')) && window.path.toLowerCase() == path.toLowerCase());
-    if (processes == null || processes.length == 0) {
-        let p = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
-        if (p.length == 0) {
-            return null;
+    const filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    if (filterProcessByname == null || filterProcessByname.length == 0) {
+        return null;
+    }
+    else {
+        const filterProcessByPath = filterProcessByname.filter(window => window.path.toLowerCase() == path.toLowerCase());
+        if (filterProcessByPath == null || filterProcessByPath.length == 0) {
+            return filterProcessByname;
         }
         else {
-            return p;
+            return filterProcessByPath;
         }
     }
-    ;
-    return processes;
 }
 exports.getAllProcessThatMatchAppName = getAllProcessThatMatchAppName;
 function clearCurrentWidow() {
