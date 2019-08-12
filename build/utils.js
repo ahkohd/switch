@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const enums_1 = require("./enums");
 const { windowManager } = require("node-window-manager");
 const open = require('open');
 const notifier = require('node-notifier');
@@ -9,6 +10,7 @@ const Conf = require('conf');
 const config = new Conf({
     encryptionKey: '..kta#md!@a-k2j',
 });
+const log = switchLog.bind({ isDevMode: checkDevMode() });
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -22,7 +24,6 @@ function switchMessage(type, data) {
 exports.switchMessage = switchMessage;
 function registerNotifierOnClick() {
     const onclick = debounce((notifierObject, options, event) => {
-        console.log(options.hotApp);
         if (options.hotApp)
             openHotApp(options.hotApp.path);
     }, 3000, false);
@@ -114,7 +115,7 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
     hotProcesses.sort(function (a, b) {
         return b.processId - a.processId;
     });
-    console.log(hotProcesses);
+    log(enums_1.Switch.LOG_INFO, 'Sorted processes', hotProcesses);
     let least = hotProcesses[0];
     if (least.isWindow()) {
         least.bringToTop();
@@ -165,7 +166,7 @@ function minimizeCurrentWindow() {
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
     if (blackList.filter(item => info.path.includes(item)).length > 0) {
-        console.log('cannot minize');
+        log(enums_1.Switch.LOG_INFO, 'Cannot minize');
         return;
     }
     ;

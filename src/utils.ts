@@ -12,6 +12,8 @@ const Conf = require('conf');
 const config = new Conf({
     encryptionKey: '..kta#md!@a-k2j',
 });
+const log = switchLog.bind({isDevMode: checkDevMode()});
+
 
 /**
  * Sends  notification to the user
@@ -38,7 +40,6 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
 export function registerNotifierOnClick() {
     const onclick = debounce((notifierObject, options, event) => {
         // if hot app is present use its' path path property to open hot app.
-        console.log(options.hotApp)
         if (options.hotApp) openHotApp(options.hotApp.path);
 
     }, 3000, false);
@@ -177,7 +178,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
     hotProcesses.sort(function (a, b) {
         return b.processId - a.processId
     });
-    console.log(hotProcesses);
+    log(Switch.LOG_INFO, 'Sorted processes', hotProcesses);
     // least pid 
     let least = hotProcesses[0];
     // if is a window, bring it up and make active
@@ -248,7 +249,7 @@ export function minimizeCurrentWindow() {
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
     // prevent minizing black listed apps..
-    if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
+    if (blackList.filter(item => info.path.includes(item)).length > 0) { log(Switch.LOG_INFO, 'Cannot minize'); return };
     if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
     }
