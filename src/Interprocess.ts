@@ -1,18 +1,12 @@
 import { EventEmitter } from "events";
-import { SwitchHotApp } from "./interfaces";
+import { SwitchHotApp, ProcessMessage } from "./interfaces";
 
 const ipc = require('node-ipc');
-
 let socket;
-export interface ProcessMessage {
-    type: string,
-    data: any,
-}
 
 export class InterProcessChannel {
-
-
     emitter: EventEmitter;
+
     constructor() {
         this.emitter = new EventEmitter();
         // kick start communication channel
@@ -22,12 +16,16 @@ export class InterProcessChannel {
         ipc.server.start();
     }
 
-
+    /**
+     * Starts the IPC and listens to incoming events 
+     */
     kickstart() {
-
+        // Config IPC
         ipc.config.id = 'switch-service-channel';
         ipc.config.retry = 1500;
         ipc.config.silent = true;
+
+        // Serve, then listen to incoming events
         ipc.serve(() => ipc.server.on('switch-service-incoming', (message, _socket) => {
             socket = _socket;
             const msg: ProcessMessage = JSON.parse(message);
@@ -51,15 +49,24 @@ export class InterProcessChannel {
         }));
     }
 
+    /**
+     * Sends client-show event to the client(dock)
+     */
     sendShowClient() {
         ipc.server.emit(socket, 'client-show', { show: true });
     }
-
+    
+    /**
+     * Sends client-update event to the client(dock)
+     */
     sendConfigUpdateToDockClient(update) {
         this.sendShowClient();
         ipc.server.emit(socket, 'config-update', update);
     }
 
+    /**
+     * Sends last-switched-app event to the client(dock)
+     */
     sendlastSwitched(app: SwitchHotApp) {
         ipc.server.emit(socket, 'last-switched-app', { hotApp: app });
     }

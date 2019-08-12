@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { windowManager } = require("node-window-manager");
-const fs = require('fs');
 const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
@@ -79,7 +78,6 @@ function getAllProcessThatMatchPath(_path) {
 }
 exports.getAllProcessThatMatchPath = getAllProcessThatMatchPath;
 function getProcessWithPID(pid) {
-    console.log(pid);
     let process = windowManager.getWindows().filter(window => window.processId == pid);
     if (process.length == 0)
         return null;
@@ -176,13 +174,4 @@ function minimizeCurrentWindow() {
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
-function makeClientActive(pid) {
-    if (pid == null)
-        return;
-    const getSwitchWindow = windowManager.getWindows().filter(win => win.processId == pid);
-    if (getSwitchWindow.length != 0) {
-        MakeHotAppActive(getSwitchWindow, false);
-    }
-}
-exports.makeClientActive = makeClientActive;
 //# sourceMappingURL=utils.js.map

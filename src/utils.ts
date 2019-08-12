@@ -1,7 +1,6 @@
 import { SwitchNotiMessage, SwitchHotApp } from './interfaces';
 import { Switch } from './enums';
 const { windowManager } = require("node-window-manager");
-const fs = require('fs');
 const open = require('open');
 
 const notifier = require('node-notifier');
@@ -14,15 +13,12 @@ const config = new Conf({
     encryptionKey: '..kta#md!@a-k2j',
 });
 
-
-
 /**
- * Sends crossplatform notification to the user
+ * Sends  notification to the user
  * @param  {Switch.ERROR_NOTI | Switch.INFO_NOTI} type Type of notification
- * @param  {SwitchNotiMessage} data Information to be send
- * @param  {} callback? If present, activation to do when user reponds to notifcation
+ * @param  {SwitchNotiMessage} data Information to be sent
+ * @param  {} callback? If present, what to do when user reponds to notifcation
  */
-
 export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: SwitchNotiMessage) {
 
     notifier.notify(
@@ -36,7 +32,9 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
         });
 }
 
-
+/**
+ * Register an event handler to handle notifier onclick
+ */
 export function registerNotifierOnClick() {
     const onclick = debounce((notifierObject, options, event) => {
         // if hot app is present use its' path path property to open hot app.
@@ -47,11 +45,10 @@ export function registerNotifierOnClick() {
     notifier.on('click', onclick);
 }
 
-
 /**
  * Get the list of saved user's hotapps
+ * @returns SwitchHotApp[]
  */
-
 export function getHotApps(): SwitchHotApp[] {
     const hotApps = config.get('hotApps');
     if (hotApps == null) {
@@ -62,10 +59,9 @@ export function getHotApps(): SwitchHotApp[] {
     }
 }
 
-/*
+/**
  * Get saved settings from store
  */
-
 export function getConfig() {
     let settings = config.get('config');
     if (settings == null) {
@@ -80,31 +76,28 @@ export function getConfig() {
     }
 }
 
-/*
+/** 
  * Save config to store
+ * @param {any} settings Settings to save
  */
-
 export function saveConfig(settings) {
     config.set('config', settings);
 }
 
-
-/*
+/** 
  * Saves hot apps to store
+ * @param {SwitchHotApp[]} hotApps List of hot apps to save
  */
 export function saveHotApps(hotApps) {
     config.set('hotApps', hotApps)
 }
 
-
-
 /**
- * Returns a hot app that matches the given hot rawcode
- * @param  {number} rawcode
- * @param  {SwitchHotApp[]} hotApps
+ * Returns a hot app that match the given hot rawcode
+ * @param  {number} rawcode Rawcode to match
+ * @param  {SwitchHotApp[]} hotApps List of hot apps
  * @returns SwitchHotApp
  */
-
 export function whichHotApp(rawcode: number, hotApps: SwitchHotApp[]): SwitchHotApp | null {
     let whichHotWindowToOpen = hotApps.filter(app => app.rawcode == rawcode);
     if (whichHotWindowToOpen.length == 0) return null;
@@ -113,8 +106,8 @@ export function whichHotApp(rawcode: number, hotApps: SwitchHotApp[]): SwitchHot
 
 /**
  * Returns all processes that matches the specified path
- * @param  {string} path
- * @returns Window
+ * @param  {string} path Path of the process
+ * @returns Window[] | null
  */
 export function getAllProcessThatMatchPath(_path: string) {
     let processes = windowManager.getWindows().filter(window => path.basename(window.path) == path.basename(_path));
@@ -122,18 +115,22 @@ export function getAllProcessThatMatchPath(_path: string) {
     return processes;
 }
 
+/**
+ * Find all processes that matches the given PID
+ * @param  {number} pid PID of the process
+ * @returns Window[] | null
+ */
 export function getProcessWithPID(pid: number) {
-
-    console.log(pid)
     let process = windowManager.getWindows().filter(window => window.processId == pid);
     if (process.length == 0) return null;
     return process[0];
 }
 
 /**
- * Returns all processes that matches specified process name and path, if it only
- * matches name, it returns it else null
- * @param  {string} name
+ * Returns all processes that match specified process name and path, if only
+ * process name is matched, it returns else null
+ * @param  {string} name Name of the process
+ * @param {string} path Path of the process
  * @returns Window[] | null
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
@@ -165,12 +162,12 @@ export function clearCurrentWidow() {
 
 /**
  * Makes hot process that is a window active
- * 1. gets the list of hot processes
- * 2. sorts them in ascending order of their pid
- * 3. checks if the least pid is a window
- * 4. brings it to top
- * 5. else looks next least pid that it a window in the list
- * 6. the brings it to the top
+ * 1. Gets the list of hot processes
+ * 2. Sorts them in descending order of using their PID
+ * 3. Checks if the least pid is a window
+ * 4. Brings it to top
+ * 5. Else looks next least pid that it a window in the list
+ * 6. Then brings it to the top
  * 
  * @param  {} hotProcesses - List of matched hot processess
  */
@@ -223,9 +220,9 @@ export function openHotApp(path: string) {
 /**
  * Debouncing enforces that a function not be called again until
  * a certain amount of time has passed without it being called
- * @param  {} callback
- * @param  {} wait
- * @param  {} immediate=false
+ * @param  {} callback What to do
+ * @param  {} wait Duration to wait for in seconds
+ * @param  {} immediate Default (false)
  */
 export function debounce(callback, wait, immediate = false) {
     let timeout = null
@@ -247,7 +244,6 @@ export function debounce(callback, wait, immediate = false) {
  * Minimizes current window.
  * Useful to prevent user from tying uncessary input..
  */
-
 export function minimizeCurrentWindow() {
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
@@ -255,14 +251,5 @@ export function minimizeCurrentWindow() {
     if (blackList.filter(item => info.path.includes(item)).length > 0) { console.log('cannot minize'); return };
     if (current.isWindow() && current.getTitle().toLowerCase() != 'switch') {
         current.minimize();
-    }
-}
-
-
-export function makeClientActive(pid: number | null) {
-    if (pid == null) return;
-    const getSwitchWindow = windowManager.getWindows().filter(win => win.processId == pid);
-    if (getSwitchWindow.length != 0) {
-        MakeHotAppActive(getSwitchWindow, false);
     }
 }

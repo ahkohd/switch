@@ -18,19 +18,15 @@ import { InterProcessChannel } from './interprocess';
 
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
-const checkcaps = require('check-caps');
 
 let clientPID = null;
 let hotapps: SwitchHotApp[] = getHotApps();
-const useFnKey = true;
 let config = getConfig();
 
 /**
  * Called to activate hot app switching
  * @param  {} event
  */
-
-
 function react(event) {
 
     let hotApp = whichHotApp(event.rawcode, hotapps);
@@ -51,31 +47,16 @@ function react(event) {
         }
     } else {
         // if not hot app found make the client active..
-        if(event.rawcode >= 48 && event.rawcode <= 58)
-        {
+        if (event.rawcode >= 48 && event.rawcode <= 58) {
             interChannel.sendShowClient();
-            switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode-48), hotApp: hotApp });
+            switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode - 48), hotApp: hotApp });
         }
 
     }
 }
 
-
 /**
- * This method activates hot app switch if user turns on caps key
- * or hold the alt key
- * @param  {} event
- */
-function capsMethod(event) {
-    // If caplocks on is react..
-    if (checkcaps.status() || event.altKey) {
-        react(event);
-    }
-}
-
-/**
- * This methond activates hot app switch if user click (fn | r alt) key then the hot app code
- * and any key afterwards
+ * Activates hot app switch if user holds the alt key
  * @param  {} event
  */
 function fnMethod(event) {
@@ -84,27 +65,19 @@ function fnMethod(event) {
     }
 }
 
-
-
-
-/*
- * Fires when on user's keyup
+/**
+ * Fires on user's keyup
  */
-
 ioHook.on('keyup', event => {
-    // console.log(event);
-    if (useFnKey) {
-        // Fn or Right Alt key capture methohd.
-        fnMethod(event);
-    } else {
-        // caps capture method.
-        capsMethod(event);
-    }
+    fnMethod(event);
 });
 
-
+/**
+ * Fires on user's keydown
+ */
 ioHook.on('keydown', event => {
     if (event.altKey) {
+        // If alt key is pressed, show dock
         interChannel.sendShowClient();
     }
 });
@@ -117,23 +90,33 @@ ioHook.start(true);
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
-
+ 
+/**
+ * Fires when hot apps list 
+ * update is recieved from client
+ */
 interChannel.emitter.on('update-hot-apps', (happs) => {
     hotapps = happs;
     console.log(hotapps);
     console.log('[info] Hot apps update recived');
     saveHotApps(happs);
-})
+});
 
-
+/**
+ * Fires when config 
+ * update is recieved from client
+ */
 interChannel.emitter.on('config-update', (settings) => {
     console.log('[info] Config update recieved.', settings);
     config = settings;
     saveConfig(settings);
-})
+});
 
-
+/**
+ * Fires when docks PID
+ * update is recieved from client
+ */
 interChannel.emitter.on('client-pid', (pid) => {
     clientPID = pid;
     console.log('[info] Hot client pid: ' + pid);
-})
+});

@@ -6,10 +6,8 @@ const enums_1 = require("./enums");
 const interprocess_1 = require("./interprocess");
 const interChannel = new interprocess_1.InterProcessChannel();
 const ioHook = require('iohook');
-const checkcaps = require('check-caps');
 let clientPID = null;
 let hotapps = utils_1.getHotApps();
-const useFnKey = true;
 let config = utils_1.getConfig();
 function react(event) {
     let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
@@ -32,23 +30,13 @@ function react(event) {
         }
     }
 }
-function capsMethod(event) {
-    if (checkcaps.status() || event.altKey) {
-        react(event);
-    }
-}
 function fnMethod(event) {
     if (event.altKey) {
         react(event);
     }
 }
 ioHook.on('keyup', event => {
-    if (useFnKey) {
-        fnMethod(event);
-    }
-    else {
-        capsMethod(event);
-    }
+    fnMethod(event);
 });
 ioHook.on('keydown', event => {
     if (event.altKey) {

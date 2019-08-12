@@ -7,6 +7,11 @@ export interface SwitchNotiMessage
     hotApp?: SwitchHotApp
 }
 
+export interface ProcessMessage {
+    type: string,
+    data: any,
+}
+
 
 export interface SwitchHotApp
 {
