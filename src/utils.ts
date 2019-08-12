@@ -253,3 +253,29 @@ export function minimizeCurrentWindow() {
         current.minimize();
     }
 }
+
+/**
+ * Checks devmode
+ */
+export function checkDevMode()
+{
+    if(process.argv[2])
+    {
+        return (process.argv[2].toLowerCase() == '--dev') ? true : false;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 
+ * @param {string} type 
+ * @param {string} msg 
+ */
+export function switchLog(type: string, ...args: any[])
+{
+    if(this.isDevMode)
+    {
+        console.log('['+type+']:', ...args);
+    }
+}

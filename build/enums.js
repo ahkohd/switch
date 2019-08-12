@@ -7,5 +7,7 @@ var Switch;
     Switch[Switch["INFO_NOTI"] = 1] = "INFO_NOTI";
     Switch["NOTI_ICON"] = "";
     Switch["APP_PATH"] = "";
+    Switch["LOG_INFO"] = "Info";
+    Switch["LOG_ERROR"] = "Error";
 })(Switch = exports.Switch || (exports.Switch = {}));
 //# sourceMappingURL=enums.js.map

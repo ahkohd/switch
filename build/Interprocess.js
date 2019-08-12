@@ -1,13 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
+const enums_1 = require("./enums");
+const utils_1 = require("./utils");
+const log = utils_1.switchLog.bind({ isDevMode: utils_1.checkDevMode() });
 const ipc = require('node-ipc');
 let socket;
 class InterProcessChannel {
     constructor() {
         this.emitter = new events_1.EventEmitter();
         this.kickstart();
-        console.log('[info]: started inter process communication channel!');
+        log(enums_1.Switch.LOG_INFO, 'Started IPC channel');
         ipc.server.start();
     }
     kickstart() {

@@ -1,6 +1,9 @@
 import { EventEmitter } from "events";
 import { SwitchHotApp, ProcessMessage } from "./interfaces";
+import { Switch } from './enums';
+import { switchLog, checkDevMode } from './utils';
 
+const log = switchLog.bind({isDevMode: checkDevMode()});
 const ipc = require('node-ipc');
 let socket;
 
@@ -12,7 +15,7 @@ export class InterProcessChannel {
         // kick start communication channel
         this.kickstart();
         // start server..
-        console.log('[info]: started inter process communication channel!');
+        log(Switch.LOG_INFO, 'Started IPC channel');
         ipc.server.start();
     }
 

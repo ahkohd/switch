@@ -5,5 +5,6 @@ export enum Switch
     INFO_NOTI = 1,
     NOTI_ICON = '',
     APP_PATH = '',
-    // ALWAYS_MAXIMIZE_WINDOW = 1
+    LOG_INFO = 'Info',
+    LOG_ERROR = 'Error'
 }

@@ -9,12 +9,13 @@ const ioHook = require('iohook');
 let clientPID = null;
 let hotapps = utils_1.getHotApps();
 let config = utils_1.getConfig();
+const log = utils_1.switchLog.bind({ isDevMode: utils_1.checkDevMode() });
 function react(event) {
     let hotApp = utils_1.whichHotApp(event.rawcode, hotapps);
     if (hotApp != null) {
         utils_1.minimizeCurrentWindow();
         let processes = utils_1.getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-        console.log('matched windows', processes);
+        log(enums_1.Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             utils_1.MakeHotAppActive(processes, config.maximize);
             interChannel.sendlastSwitched(hotApp);
@@ -48,17 +49,16 @@ ioHook.start(true);
 utils_1.registerNotifierOnClick();
 interChannel.emitter.on('update-hot-apps', (happs) => {
     hotapps = happs;
-    console.log(hotapps);
-    console.log('[info] Hot apps update recived');
+    log(enums_1.Switch.LOG_INFO, 'Hot apps update received', hotapps);
     utils_1.saveHotApps(happs);
 });
 interChannel.emitter.on('config-update', (settings) => {
-    console.log('[info] Config update recieved.', settings);
+    log(enums_1.Switch.LOG_INFO, 'Config update update received', settings);
     config = settings;
     utils_1.saveConfig(settings);
 });
 interChannel.emitter.on('client-pid', (pid) => {
     clientPID = pid;
-    console.log('[info] Hot client pid: ' + pid);
+    log(enums_1.Switch.LOG_INFO, 'Hot client pid ::', pid);
 });
 //# sourceMappingURL=switch.js.map

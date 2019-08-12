@@ -9,6 +9,8 @@ import {
     getHotApps,
     saveConfig,
     getConfig,
+    checkDevMode,
+    switchLog
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -22,6 +24,8 @@ const ioHook = require('iohook');
 let clientPID = null;
 let hotapps: SwitchHotApp[] = getHotApps();
 let config = getConfig();
+const log = switchLog.bind({isDevMode: checkDevMode()});
+
 
 /**
  * Called to activate hot app switching
@@ -36,7 +40,7 @@ function react(event) {
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's name and path
         let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-        console.log('matched windows', processes);
+        log(Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             // minimizeCurrentWindow();
             // Make hotapp active
@@ -97,8 +101,7 @@ registerNotifierOnClick();
  */
 interChannel.emitter.on('update-hot-apps', (happs) => {
     hotapps = happs;
-    console.log(hotapps);
-    console.log('[info] Hot apps update recived');
+    log(Switch.LOG_INFO, 'Hot apps update received', hotapps);
     saveHotApps(happs);
 });
 
@@ -107,7 +110,7 @@ interChannel.emitter.on('update-hot-apps', (happs) => {
  * update is recieved from client
  */
 interChannel.emitter.on('config-update', (settings) => {
-    console.log('[info] Config update recieved.', settings);
+    log(Switch.LOG_INFO, 'Config update update received', settings);
     config = settings;
     saveConfig(settings);
 });
@@ -118,5 +121,5 @@ interChannel.emitter.on('config-update', (settings) => {
  */
 interChannel.emitter.on('client-pid', (pid) => {
     clientPID = pid;
-    console.log('[info] Hot client pid: ' + pid);
+    log(Switch.LOG_INFO, 'Hot client pid ::', pid);
 });

@@ -174,4 +174,19 @@ function minimizeCurrentWindow() {
     }
 }
 exports.minimizeCurrentWindow = minimizeCurrentWindow;
+function checkDevMode() {
+    if (process.argv[2]) {
+        return (process.argv[2].toLowerCase() == '--dev') ? true : false;
+    }
+    else {
+        return false;
+    }
+}
+exports.checkDevMode = checkDevMode;
+function switchLog(type, ...args) {
+    if (this.isDevMode) {
+        console.log('[' + type + ']:', ...args);
+    }
+}
+exports.switchLog = switchLog;
 //# sourceMappingURL=utils.js.map
