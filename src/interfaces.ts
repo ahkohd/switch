@@ -12,7 +12,6 @@ export interface ProcessMessage {
     data: any,
 }
 
-
 export interface SwitchHotApp
 {
     name: string,
