@@ -40,6 +40,8 @@ export class InterProcessChannel {
                     break;
                 case 'config-update':
                     this.emitter.emit('config-update', msg.data);
+                    // show dock on when settings is saved.
+                    this.sendConfigUpdateToDockClient(msg.data);
                     break;
                 case 'show-dock':
                     console.log('[info] Show dock');
@@ -51,6 +53,11 @@ export class InterProcessChannel {
 
     sendShowClient() {
         ipc.server.emit(socket, 'client-show', { show: true });
+    }
+
+    sendConfigUpdateToDockClient(update) {
+        this.sendShowClient();
+        ipc.server.emit(socket, 'config-update', update);
     }
 
     sendlastSwitched(app: SwitchHotApp) {
