@@ -1,5 +1,6 @@
 import { SwitchNotiMessage, SwitchHotApp } from './interfaces';
 import { Switch } from './enums';
+import { readFileSync } from 'fs';
 const { windowManager } = require("node-window-manager");
 const open = require('open');
 
@@ -13,7 +14,7 @@ const config = new Conf({
     encryptionKey: '..kta#md!@a-k2j',
 });
 const log = switchLog.bind({isDevMode: checkDevMode()});
-
+const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath), './switch.ico')  : path.join(__dirname, '../assets/switch.ico');
 
 /**
  * Sends  notification to the user
@@ -23,11 +24,12 @@ const log = switchLog.bind({isDevMode: checkDevMode()});
  */
 export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: SwitchNotiMessage) {
 
+
     notifier.notify(
         {
             title: 'Switch - ' + data.title,
             message: data.message,
-            icon: path.join(__dirname, '../', 'assets', 'switch.ico'), // Absolute path (doesn't work on balloons)
+            icon: icoPath, // Absolute path (doesn't work on balloons)
             sound: false, // Only Notification Center or Windows Toasters
             wait: true, // Wait with callback, until user action is taken against notification
             hotApp: (data.hotApp) ? data.hotApp : null

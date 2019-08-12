@@ -11,11 +11,12 @@ const config = new Conf({
     encryptionKey: '..kta#md!@a-k2j',
 });
 const log = switchLog.bind({ isDevMode: checkDevMode() });
+const icoPath = (process.pkg) ? path.join(path.dirname(process.execPath), './switch.ico') : path.join(__dirname, '../assets/switch.ico');
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
         message: data.message,
-        icon: path.join(__dirname, '../', 'assets', 'switch.ico'),
+        icon: icoPath,
         sound: false,
         wait: true,
         hotApp: (data.hotApp) ? data.hotApp : null
