@@ -29,7 +29,7 @@ export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: 
         {
             title: 'Switch - ' + data.title,
             message: data.message,
-            icon: '../assets/switch.ico', // Absolute path (doesn't work on balloons)
+            icon: path.join(__dirname, '../', 'assets', 'switch.ico'), // Absolute path (doesn't work on balloons)
             sound: false, // Only Notification Center or Windows Toasters
             wait: true, // Wait with callback, until user action is taken against notification
             hotApp: (data.hotApp) ? data.hotApp : null

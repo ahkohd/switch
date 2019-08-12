@@ -14,7 +14,7 @@ function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
         message: data.message,
-        icon: '../assets/switch.ico',
+        icon: path.join(__dirname, '../', 'assets', 'switch.ico'),
         sound: false,
         wait: true,
         hotApp: (data.hotApp) ? data.hotApp : null
