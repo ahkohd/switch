@@ -6,6 +6,10 @@ const open = require('open');
 const notifier = require('node-notifier');
 const path = require('path');
 const blackList = ['explorer.exe'];
+const Conf = require('conf');
+const config = new Conf({
+    encryptionKey: '..kta#md!@a-k2j',
+});
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -27,16 +31,37 @@ function registerNotifierOnClick() {
 }
 exports.registerNotifierOnClick = registerNotifierOnClick;
 function getHotApps() {
-    let rawdata = fs.readFileSync(path.join(__dirname, 'switch.json'));
-    return JSON.parse(rawdata);
+    const hotApps = config.get('hotApps');
+    if (hotApps == null) {
+        config.set('hotApps', []);
+        return [];
+    }
+    else {
+        return hotApps;
+    }
 }
 exports.getHotApps = getHotApps;
-function saveHotApps(data) {
-    fs.writeFile(path.join(__dirname, 'switch.json'), JSON.stringify(data), (err) => {
-        if (err)
-            throw err;
-        console.log('[info] Saved hot apps!');
-    });
+function getConfig() {
+    let settings = config.get('config');
+    if (settings == null) {
+        const initial = {
+            autoHide: true,
+            maximize: true
+        };
+        config.set('config', initial);
+        return initial;
+    }
+    else {
+        return settings;
+    }
+}
+exports.getConfig = getConfig;
+function saveConfig(settings) {
+    config.set('config', settings);
+}
+exports.saveConfig = saveConfig;
+function saveHotApps(hotApps) {
+    config.set('hotApps', hotApps);
 }
 exports.saveHotApps = saveHotApps;
 function whichHotApp(rawcode, hotApps) {
@@ -95,8 +120,12 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
     let least = hotProcesses[0];
     if (least.isWindow()) {
         least.bringToTop();
-        if (maximize)
+        if (!maximize) {
+            least.restore();
+        }
+        else {
             least.maximize();
+        }
     }
     else {
         least = hotProcesses;
@@ -105,7 +134,12 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
             if (least[i].isWindow()) {
                 const hot = least[i];
                 hot.bringToTop();
-                hot.maximize();
+                if (!maximize) {
+                    hot.restore();
+                }
+                else {
+                    hot.maximize();
+                }
                 break;
             }
         }

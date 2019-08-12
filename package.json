@@ -13,6 +13,7 @@
   "license": "",
   "dependencies": {
     "check-caps": "^1.0.3",
+    "conf": "^5.0.0",
     "iohook": "^0.6.1",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",

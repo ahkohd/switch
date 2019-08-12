@@ -9,6 +9,13 @@ const path = require('path');
 const blackList = ['explorer.exe'];
 
 
+const Conf = require('conf');
+const config = new Conf({
+    encryptionKey: '..kta#md!@a-k2j',
+});
+
+
+
 /**
  * Sends crossplatform notification to the user
  * @param  {Switch.ERROR_NOTI | Switch.INFO_NOTI} type Type of notification
@@ -42,23 +49,54 @@ export function registerNotifierOnClick() {
 
 
 /**
- * Get the list of saved user's favourite apps
+ * Get the list of saved user's hotapps
  */
 
 export function getHotApps(): SwitchHotApp[] {
-    let rawdata = fs.readFileSync(path.join(__dirname, 'switch.json'));
-    return JSON.parse(rawdata);
+    const hotApps = config.get('hotApps');
+    if (hotApps == null) {
+        config.set('hotApps', []);
+        return [];
+    } else {
+        return hotApps;
+    }
 }
 
 /*
- * Saves hot app into persistent json file on disk
+ * Get saved settings from store
  */
-export function saveHotApps(data) {
-    fs.writeFile(path.join(__dirname, 'switch.json'), JSON.stringify(data), (err) => {
-        if (err) throw err;
-        console.log('[info] Saved hot apps!');
-    });
+
+export function getConfig() {
+    let settings = config.get('config');
+    if (settings == null) {
+        const initial = {
+            autoHide: true,
+            maximize: true
+        };
+        config.set('config', initial);
+        return initial;
+    } else {
+        return settings;
+    }
 }
+
+/*
+ * Save config to store
+ */
+
+export function saveConfig(settings) {
+    config.set('config', settings);
+}
+
+
+/*
+ * Saves hot apps to store
+ */
+export function saveHotApps(hotApps) {
+    config.set('hotApps', hotApps)
+}
+
+
 
 /**
  * Returns a hot app that matches the given hot rawcode
@@ -79,17 +117,16 @@ export function whichHotApp(rawcode: number, hotApps: SwitchHotApp[]): SwitchHot
  * @returns Window
  */
 export function getAllProcessThatMatchPath(_path: string) {
-    let processes = windowManager.getWindows().filter(window => path.basename(window.path) ==  path.basename(_path));
+    let processes = windowManager.getWindows().filter(window => path.basename(window.path) == path.basename(_path));
     if (processes == null || processes.length == 0) return null;
     return processes;
 }
 
-export function getProcessWithPID(pid: number)
-{
+export function getProcessWithPID(pid: number) {
 
     console.log(pid)
     let process = windowManager.getWindows().filter(window => window.processId == pid);
-    if(process.length == 0) return null;
+    if (process.length == 0) return null;
     return process[0];
 }
 
@@ -101,14 +138,12 @@ export function getProcessWithPID(pid: number)
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
-    const filterProcessByname = windowManager.getWindows().filter(window=>window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
-    if(filterProcessByname == null || filterProcessByname.length == 0)
-    {
+    const filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    if (filterProcessByname == null || filterProcessByname.length == 0) {
         return null;
     } else {
-        const filterProcessByPath = filterProcessByname.filter(window=> window.path.toLowerCase() == path.toLowerCase());
-        if(filterProcessByPath == null || filterProcessByPath.length == 0)
-        {
+        const filterProcessByPath = filterProcessByname.filter(window => window.path.toLowerCase() == path.toLowerCase());
+        if (filterProcessByPath == null || filterProcessByPath.length == 0) {
             return filterProcessByname;
         } else {
             return filterProcessByPath;
@@ -151,22 +186,29 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
     // if is a window, bring it up and make active
     if (least.isWindow()) {
         least.bringToTop();
-        if(maximize) least.maximize();
+        if (!maximize) {
+            least.restore();
+        } else {
+            least.maximize();
+        }
     } else {
         // else loop to the rest and find the 1st windowed process..
         // remove the least one
-        least  = hotProcesses;
+        least = hotProcesses;
         least.shift();
         for (let i = 0; i < least.length; i++) {
             if (least[i].isWindow()) {
                 // Then bring the window to the top.
                 const hot = least[i];
                 hot.bringToTop();
-                hot.maximize();
+                if(!maximize) {
+                    hot.restore();
+                } else {
+                    hot.maximize();
+                }
                 break;
             }
         }
-
     }
 }
 
@@ -217,12 +259,10 @@ export function minimizeCurrentWindow() {
 }
 
 
-export function makeClientActive(pid: number | null)
-{
-    if(pid == null) return;
-    const getSwitchWindow = windowManager.getWindows().filter(win=>win.processId == pid);
-    if(getSwitchWindow.length != 0)
-    {
+export function makeClientActive(pid: number | null) {
+    if (pid == null) return;
+    const getSwitchWindow = windowManager.getWindows().filter(win => win.processId == pid);
+    if (getSwitchWindow.length != 0) {
         MakeHotAppActive(getSwitchWindow, false);
     }
 }

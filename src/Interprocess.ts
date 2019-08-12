@@ -38,6 +38,9 @@ export class InterProcessChannel {
                 case 'client-pid':
                     this.emitter.emit('client-pid', msg.data);
                     break;
+                case 'config-update':
+                    this.emitter.emit('config-update', msg.data);
+                    break;
                 case 'show-dock':
                     console.log('[info] Show dock');
                     this.sendShowClient();

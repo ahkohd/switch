@@ -1,14 +1,14 @@
 import {
     whichHotApp,
     switchMessage,
-    clearCurrentWidow,
     saveHotApps,
     MakeHotAppActive,
     getAllProcessThatMatchAppName,
     registerNotifierOnClick,
     minimizeCurrentWindow,
     getHotApps,
-    makeClientActive,
+    saveConfig,
+    getConfig,
 } from './utils';
 
 import { SwitchHotApp } from './interfaces';
@@ -19,14 +19,11 @@ import { InterProcessChannel } from './interprocess';
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
 const checkcaps = require('check-caps');
-const secondKeyPressTimeout = 600;
+
 let clientPID = null;
-
-
 let hotapps: SwitchHotApp[] = getHotApps();
-
 const useFnKey = true;
-let timer = null;
+let config = getConfig();
 
 /**
  * Called to activate hot app switching
@@ -47,7 +44,7 @@ function react(event) {
         if (processes) {
             // minimizeCurrentWindow();
             // Make hotapp active
-            MakeHotAppActive(processes);
+            MakeHotAppActive(processes, config.maximize);
             interChannel.sendlastSwitched(hotApp);
         } else {
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.processNotFound(hotApp.name), hotApp: hotApp });
@@ -56,7 +53,7 @@ function react(event) {
         // if not hot app found make the client active..
         if(event.rawcode >= 48 && event.rawcode <= 58)
         {
-            // makeClientActive(clientPID);
+            interChannel.sendShowClient();
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode-48), hotApp: hotApp });
         }
 
@@ -126,6 +123,13 @@ interChannel.emitter.on('update-hot-apps', (happs) => {
     console.log(hotapps);
     console.log('[info] Hot apps update recived');
     saveHotApps(happs);
+})
+
+
+interChannel.emitter.on('config-update', (settings) => {
+    console.log('[info] Config update recieved.', settings);
+    config = settings;
+    saveConfig(settings);
 })
 
 
