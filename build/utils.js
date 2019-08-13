@@ -8,6 +8,7 @@ const path = require('path');
 const blackList = ['explorer.exe'];
 const Conf = require('conf');
 const config = new Conf({
+    projectName: 'SwitchService',
     encryptionKey: '..kta#md!@a-k2j',
 });
 const log = switchLog.bind({ isDevMode: checkDevMode() });
