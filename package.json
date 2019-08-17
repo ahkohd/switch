@@ -1,7 +1,7 @@
 {
   "name": "switch",
   "version": "1.0.0",
-  "description": "Switch between your favourite apps lightnen fast",
+  "description": "Switch between your favourite apps lightning fast (Windows, MacOS)",
   "main": "build/switch.js",
   "scripts": {
     "watch-ts": "tsc -w",
