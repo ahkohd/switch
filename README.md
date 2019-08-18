@@ -1,5 +1,5 @@
 # Switch Service
-Switch's stand-alone service for switching apps. Uses IPC (Inter Process Communication) to communicate (two-way) with [Switch Desktop.](http://ahkohd.github.com/switch-desktop)
+Switch's crossplatform stand-alone service for switching apps. Uses IPC (Inter Process Communication) to communicate (two-way) with [Switch Desktop.](http://ahkohd.github.com/switch-desktop)
 
 # Running
 Before running Switch Service in development mode, please ensure you have Node.js installed on your machine.
