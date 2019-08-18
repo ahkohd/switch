@@ -15,7 +15,6 @@ function react(event) {
     if (hotApp != null) {
         utils_1.minimizeCurrentWindow();
         let processes = utils_1.getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-        log(enums_1.Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             utils_1.MakeHotAppActive(processes, config.maximize);
             interChannel.sendlastSwitched(hotApp);

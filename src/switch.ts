@@ -40,7 +40,7 @@ function react(event) {
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's name and path
         let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-        log(Switch.LOG_INFO, 'matched windows', processes);
+        // log(Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             // minimizeCurrentWindow();
             // Make hotapp active

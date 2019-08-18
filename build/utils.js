@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const enums_1 = require("./enums");
+const ostype = require("os").type();
 const { windowManager } = require("node-window-manager");
 const open = require('open');
 const notifier = require('node-notifier');
@@ -125,7 +126,8 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
             least.restore();
         }
         else {
-            least.maximize();
+            if (ostype == "Windows_NT")
+                least.maximize();
         }
     }
     else {
@@ -139,7 +141,8 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
                     hot.restore();
                 }
                 else {
-                    hot.maximize();
+                    if (ostype == "Windows_NT")
+                        hot.maximize();
                 }
                 break;
             }

@@ -1,6 +1,6 @@
 import { SwitchNotiMessage, SwitchHotApp } from './interfaces';
 import { Switch } from './enums';
-import { readFileSync } from 'fs';
+const ostype = require("os").type();
 const { windowManager } = require("node-window-manager");
 const open = require('open');
 
@@ -190,7 +190,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
         if (!maximize) {
             least.restore();
         } else {
-            least.maximize();
+            if(ostype == "Windows_NT") least.maximize();
         }
     } else {
         // else loop to the rest and find the 1st windowed process..
@@ -205,7 +205,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
                 if(!maximize) {
                     hot.restore();
                 } else {
-                    hot.maximize();
+                    if(ostype == "Windows_NT") hot.maximize();
                 }
                 break;
             }
