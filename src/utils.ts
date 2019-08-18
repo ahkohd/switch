@@ -25,7 +25,6 @@ const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath
  */
 export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: SwitchNotiMessage) {
 
-
     notifier.notify(
         {
             title: 'Switch - ' + data.title,
