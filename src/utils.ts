@@ -23,8 +23,8 @@ const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath
  * @param  {SwitchNotiMessage} data Information to be sent
  * @param  {} callback? If present, what to do when user reponds to notifcation
  */
-export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: SwitchNotiMessage) {
 
+export function switchMessage(type: Switch.ERROR_NOTI | Switch.INFO_NOTI, data: SwitchNotiMessage) {
     notifier.notify(
         {
             title: 'Switch - ' + data.title,
