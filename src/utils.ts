@@ -138,6 +138,8 @@ export function getProcessWithPID(pid: number) {
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
+    // awaiting for node-window-manager isWindowVisible() feature update
+    // const filterProcessByname = windowManager.getWindows().filter(window => window.isWindowVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     const filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     if (filterProcessByname == null || filterProcessByname.length == 0) {
         return null;
