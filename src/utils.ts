@@ -142,7 +142,6 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
     if(ostype == "Windows_NT")
     {
         // since window.isVisible() is only supported in Windows
-        console.log('visible window filtered!');
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     } else {
         filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
