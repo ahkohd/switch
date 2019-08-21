@@ -89,7 +89,13 @@ function getProcessWithPID(pid) {
 }
 exports.getProcessWithPID = getProcessWithPID;
 function getAllProcessThatMatchAppName(name, path) {
-    const filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    let filterProcessByname;
+    if (ostype == "Windows_NT") {
+        filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    }
+    else {
+        filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    }
     if (filterProcessByname == null || filterProcessByname.length == 0) {
         return null;
     }

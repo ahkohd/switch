@@ -130,7 +130,7 @@ export function getProcessWithPID(pid: number) {
 }
 
 /**
- * Returns all processes that match specified process name and path, if only
+ * Returns all processes (of visible windows) that match specified process name and path, if only
  * process name is matched, it returns else null
  * @param  {string} name Name of the process
  * @param {string} path Path of the process
@@ -138,9 +138,15 @@ export function getProcessWithPID(pid: number) {
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
-    // awaiting for node-window-manager isWindowVisible() feature update
-    // const filterProcessByname = windowManager.getWindows().filter(window => window.isWindowVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
-    const filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    let filterProcessByname;
+    if(ostype == "Windows_NT")
+    {
+        // since window.isVisible() is only supported in Windows
+        filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    } else {
+        filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    }
+
     if (filterProcessByname == null || filterProcessByname.length == 0) {
         return null;
     } else {
