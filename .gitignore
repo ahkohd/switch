@@ -1,6 +1,6 @@
 node_modules
 .vscode
-.bin/*
+bin/*
 !bin/.gitkeep 
-.build/*
+build/*
 !build/.gitkeep 
