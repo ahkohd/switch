@@ -6,5 +6,6 @@ export enum Switch
     NOTI_ICON = '',
     APP_PATH = '',
     LOG_INFO = 'Info',
-    LOG_ERROR = 'Error'
+    LOG_ERROR = 'Error',
+    WINDOWS = 'Windows_NT'
 }
