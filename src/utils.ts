@@ -139,7 +139,7 @@ export function getProcessWithPID(pid: number) {
  */
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
-    let filterProcessByname;
+    let filterProcessByname = [];
     if(ostype == Switch.WINDOWS)
     {
         // since window.isVisible() is only supported in Windows
