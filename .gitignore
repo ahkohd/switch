@@ -2,7 +2,7 @@ node_modules
 .vscode
 bin/*
 bin/notifier/*
-!bin/notifier
+!bin/notifier/.gitkeep
 !bin/switch.ico
 !bin/.gitkeep
 build/*
