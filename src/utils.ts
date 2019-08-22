@@ -8,7 +8,6 @@ const notifier = require('node-notifier');
 const path = require('path');
 const blackList = ['explorer.exe'];
 
-
 const Conf = require('conf');
 const config = new Conf({
     projectName: 'SwitchService',
@@ -16,6 +15,8 @@ const config = new Conf({
 });
 const log = switchLog.bind({isDevMode: checkDevMode()});
 const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath), './switch.ico')  : path.join(__dirname, '../assets/switch.ico');
+
+log(Switch.LOG_INFO, 'ENV', ostype);
 
 /**
  * Sends  notification to the user
@@ -139,7 +140,7 @@ export function getProcessWithPID(pid: number) {
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
     let filterProcessByname;
-    if(ostype == "Windows_NT")
+    if(ostype == Switch.WINDOWS)
     {
         // since window.isVisible() is only supported in Windows
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
@@ -197,7 +198,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
         if (!maximize) {
             least.restore();
         } else {
-            if(ostype == "Windows_NT") least.maximize();
+            if(ostype == Switch.WINDOWS) least.maximize();
         }
     } else {
         // else loop to the rest and find the 1st windowed process..
@@ -212,7 +213,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
                 if(!maximize) {
                     hot.restore();
                 } else {
-                    if(ostype == "Windows_NT") hot.maximize();
+                    if(ostype == Switch.WINDOWS) hot.maximize();
                 }
                 break;
             }

@@ -9,5 +9,6 @@ var Switch;
     Switch["APP_PATH"] = "";
     Switch["LOG_INFO"] = "Info";
     Switch["LOG_ERROR"] = "Error";
+    Switch["WINDOWS"] = "Windows_NT";
 })(Switch = exports.Switch || (exports.Switch = {}));
 //# sourceMappingURL=enums.js.map

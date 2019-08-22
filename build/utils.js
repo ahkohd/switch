@@ -14,6 +14,7 @@ const config = new Conf({
 });
 const log = switchLog.bind({ isDevMode: checkDevMode() });
 const icoPath = (process.pkg) ? path.join(path.dirname(process.execPath), './switch.ico') : path.join(__dirname, '../assets/switch.ico');
+log(enums_1.Switch.LOG_INFO, 'ENV', ostype);
 function switchMessage(type, data) {
     notifier.notify({
         title: 'Switch - ' + data.title,
@@ -90,7 +91,7 @@ function getProcessWithPID(pid) {
 exports.getProcessWithPID = getProcessWithPID;
 function getAllProcessThatMatchAppName(name, path) {
     let filterProcessByname;
-    if (ostype == "Windows_NT") {
+    if (ostype == enums_1.Switch.WINDOWS) {
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     }
     else {
@@ -132,7 +133,7 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
             least.restore();
         }
         else {
-            if (ostype == "Windows_NT")
+            if (ostype == enums_1.Switch.WINDOWS)
                 least.maximize();
         }
     }
@@ -147,7 +148,7 @@ function MakeHotAppActive(hotProcesses, maximize = true) {
                     hot.restore();
                 }
                 else {
-                    if (ostype == "Windows_NT")
+                    if (ostype == enums_1.Switch.WINDOWS)
                         hot.maximize();
                 }
                 break;
