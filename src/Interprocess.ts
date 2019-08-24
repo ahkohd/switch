@@ -63,8 +63,8 @@ export class InterProcessChannel {
      * Sends client-update event to the client(dock)
      */
     sendConfigUpdateToDockClient(update) {
-        this.sendShowClient();
         ipc.server.emit(socket, 'config-update', update);
+        this.sendShowClient();
     }
 
     /**
