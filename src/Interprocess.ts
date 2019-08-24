@@ -41,7 +41,7 @@ export class InterProcessChannel {
                     break;
                 case 'config-update':
                     this.emitter.emit('config-update', msg.data);
-                    // show dock on when settings is saved.
+                    // send config update to client..
                     this.sendConfigUpdateToDockClient(msg.data);
                     break;
                 case 'show-dock':
