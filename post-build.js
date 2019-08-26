@@ -49,7 +49,7 @@ if(process.platform == 'darwin')
         from: `./node_modules/iohook/builds/node-v64-darwin-x64/build/Release/iohook.node`,
         to: 'bin/iohook.node'
     });
-} else if(process.platform == 'win32' || process.platform == 'win64')
+} else if(process.platform == 'win32')
 {
     list.push({
         from: `./node_modules/iohook/builds/node-v64-win32-x64/build/Release/iohook.node`,
