@@ -1,17 +1,15 @@
-os:
-  - linux
-  - osx
-language: node_js
-node_js:
-  - 9
-  - "node"
-cache: npm
 matrix:
-  exclude:
-    - os: linux
-      node_js: 10
   include:
     - os: osx
-      node_js: 9
-      script: npm i -g pkg
-      script: npm run compile-darwin
+      language: node_js
+      node_js: "9"
+      script:
+        - npm i -g pkg
+        - npm run build-darwin
+cache:
+  directories:
+    - node_modules
+
+branches:
+  only:
+    - master
