@@ -33,5 +33,18 @@
     "concurrently": "^4.1.1",
     "nodemon": "^1.19.1",
     "typescript": "^3.5.3"
+  },
+  "iohook": {
+    "targets": [
+      "node-64"
+    ],
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }
