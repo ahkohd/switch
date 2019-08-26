@@ -9,3 +9,4 @@ bin/notifier/*
 !bin/*.dll
 build/*
 !build/.gitkeep
+/*.zip

@@ -1,0 +1,40 @@
+image: Visual Studio 2017
+
+platform:
+  - x64
+
+cache:
+  - node_modules
+
+init:
+  - git config --global core.autocrlf input
+
+install:
+  - ps: Install-Product node 10 x64
+  - npm i
+  - npm i -g pkg
+
+build_script:
+  - npm run build-win32
+
+test: off
+
+branches:
+  only:
+    - master
+
+artifacts:
+  - path: /*_release.zip
+    name: Releases
+
+deploy:
+  release: switch-v0.0.1
+  description: 'Update'
+  provider: GitHub
+  auth_token:
+    secure: CT5g4t5aF301xzMk6NfS5ieiYT/PB77ua4s6Z7T2glcYG9dd1A7skEoQy1oNoCv2
+  artifact: Releases
+  draft: true
+  prerelease: false
+  on:
+    branch: master
