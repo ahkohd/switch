@@ -12,9 +12,9 @@ init:
 install:
   - ps: Install-Product node 10 x64
   - npm i
+  - npm i -g pkg
 
 build_script:
-  - npm i -g pkg
   - npm run build-win32
 
 test: off

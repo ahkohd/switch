@@ -4,7 +4,6 @@ matrix:
       osx_image: xcode10.2
       language: node_js
       node_js: "10"
-      env:
       script:
         - npm i -g pkg
         - npm run build-darwin
@@ -13,7 +12,5 @@ cache:
     - node_modules
 
 branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
   only:
     - master
