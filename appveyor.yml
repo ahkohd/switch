@@ -27,8 +27,7 @@ deploy:
   release: switch-v$(appveyor_build_version)
   description: 'Release description'
   provider: GitHub
-  auth_token:
-    secure: %GH_TOKEN% 
+  auth_token: $GH_TOKEN
   artifact: /.*\.zip/ 
   draft: true
   prerelease: false
