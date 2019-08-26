@@ -80,6 +80,7 @@ zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, fun
             draft: true,
             prerelease: true,
             name: 'v'+getVersion,
+            body: '* Update\n',
             repo: 'switch',
             owner: 'ahkohd',
             assets: [`./switch_deamon_v${getVersion}_${process.platform}.zip`],
