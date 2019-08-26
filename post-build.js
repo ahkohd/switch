@@ -60,7 +60,7 @@ list.forEach(path => {
 });
 
 const getVersion = JSON.parse(fs.readFileSync('./package.json')).version;
-zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, function (err) {
+zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}_release.zip`, function (err) {
     if (err) {
         console.log('[info]: Packing failed', err);
     } else {
