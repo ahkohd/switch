@@ -4,6 +4,8 @@ matrix:
       osx_image: xcode10.2
       language: node_js
       node_js: "11"
+      env:
+        - NODE_OPTIONS=–-max_old_space_size=4096
       before_script:
         - export NODE_OPTIONS=–-max_old_space_size=4096
       script:
