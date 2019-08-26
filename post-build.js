@@ -77,8 +77,6 @@ zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, fun
         var options = {
             tag_name: getVersion,
             target_commitish: 'master',
-            name: getVersion,
-            body: '* Update\n',
             draft: true,
             prerelease: true,
             repo: 'switch',
