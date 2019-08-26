@@ -5,5 +5,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version v1.0.0 (2019-08-26)
+## 1.0.0  2019-08-26
 ### Added
 - Upgrade post build script. Automatic packing and deployment to github release.
