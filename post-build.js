@@ -36,18 +36,31 @@ const list = [{
         to: 'bin/notifier/terminal-notifier'
     },
     {
-        from: `./node_modules/iohook/builds/node-v64-${process.platform}-x64/build/Release/iohook.node`,
-        to: 'bin/iohook.node'
-    },
-    {
-        from: `./node_modules/iohook/builds/node-v64-${process.platform}-x64/build/Release/uiohook.dll`,
-        to: 'bin/uiohook.dll'
-    },
-    {
         from: './node_modules/node-window-manager/build/Release/addon.node',
         to: 'bin/addon.node'
     }
 ];
+
+
+// iohook platform specific for mac and windows..
+if(process.platform == 'darwin')
+{
+    list.push({
+        from: `./node_modules/iohook/builds/node-v64-darwin-x64/build/Release/iohook.node`,
+        to: 'bin/iohook.node'
+    });
+} else if(process.platform == 'win32' || process.platform == 'win64')
+{
+    list.push({
+        from: `./node_modules/iohook/builds/node-v64-win32-x64/build/Release/iohook.node`,
+        to: 'bin/iohook.node'
+    });
+    list.push( {
+        from: `./node_modules/iohook/builds/node-v64-win32-x64/build/Release/uiohook.dll`,
+        to: 'bin/uiohook.dll'
+    });
+
+}
 
 
 list.forEach(path => {
