@@ -7,16 +7,23 @@
     "watch-ts": "tsc -w",
     "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js --dev\"",
     "start": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
-    "build": "tsc  && pkg . --output bin/switch --targets node10-win-x64,node10-linux-x64,node10-macos-x64  && node post-build.js"
+    "build-win32": "tsc  && pkg . --output bin/switch --targets node10-win-x64  && node post-build.js",
+    "build-darwin": "tsc  && pkg . --output bin/switch --targets node10-macos-x64  && node post-build.js",
+    "build-linux": "tsc  && pkg . --output bin/switch --targets node10-linux-x64  && node post-build.js"
   },
   "bin": "build/switch.js",
   "author": "Victor Aremu",
   "license": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahkohd/switch.git"
+  },
   "dependencies": {
     "@sentry/node": "^5.6.2",
     "conf": "^5.0.0",
+    "fs-copy-file-sync": "^1.1.1",
     "gh-release": "^3.5.0",
-    "iohook": "@0.6.1",
+    "iohook": "^0.6.1",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",
     "node-window-manager": "^1.1.0",

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const zipFolder = require('zip-folder');
 const ghRelease = require('gh-release');
+const copyFileSync = require('fs-copy-file-sync');
 
 console.log("SWITCH SERVICE POST BUILD");
 // create bin folder if does not exists
@@ -53,18 +54,10 @@ const list = [{
 list.forEach(path => {
     if (fs.existsSync(path.from)) {
         console.log(`[info]: Copy ${path.from}`);
-        fs.copyFile(path.from, path.to, (err) => {
-            if (err) throw err;
-            console.log(`[info]: Copied ${path.to}`);
-        });
+        copyFileSync(path.from, path.to);
+        console.log(`[info]: Copied ${path.to}`);
     }
 });
-
-console.log('[info]: Packing Binaries');
-if (!process.env.GH_TOKEN) {
-    console.log('[info]: GH_TOKEN not set, Aborted release!');
-    return;
-}
 
 const getVersion = JSON.parse(fs.readFileSync('./package.json')).version;
 zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, function (err) {
@@ -72,27 +65,35 @@ zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, fun
         console.log('[info]: Packing failed', err);
     } else {
         console.log('[success]: BUILD SUCCEED!');
+
+        // release to github
+        console.log('[info]: Packing Binaries');
+        if (!process.env.GH_TOKEN) {
+            console.log('[info]: GH_TOKEN not set, Aborted release!');
+            return;
+        }
+
+        console.log('[info]: Releasing to github');
+        var options = {
+            tag_name: getVersion,
+            target_commitish: 'master',
+            name: getVersion,
+            body: '* Update\n',
+            draft: true,
+            prerelease: true,
+            repo: 'switch',
+            owner: 'ahkohd',
+            assets: [`./switch_deamon_v${getVersion}_${process.platform}.zip`],
+            endpoint: 'https://api.github.com' // for GitHub enterprise, use http(s)://hostname/api/v3
+        };
+
+        options.auth = {
+            token: process.env.GH_TOKEN
+        };
+
+        ghRelease(options, function (err, result) {
+            if (err) throw err
+            console.log('[success]: Released to github');
+        });
     }
-});
-
-console.log('[info]: Releasing to github');
-var options = {
-    tag_name: getVersion,
-    target_commitish: 'master',
-    name: 'v1.0.0',
-    body: '* Update\n',
-    draft: true,
-    prerelease: true,
-    repo: 'switch',
-    owner: 'ahkohd',
-    endpoint: 'https://api.github.com' // for GitHub enterprise, use http(s)://hostname/api/v3
-};
-
-options.auth = {
-    token: process.env.GH_TOKEN
-};
-
-ghRelease(options, function (err, result) {
-    if (err) throw err
-    console.log('[success]: Released to github');
 });
