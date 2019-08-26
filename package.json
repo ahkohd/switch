@@ -15,11 +15,12 @@
   "dependencies": {
     "@sentry/node": "^5.6.2",
     "conf": "^5.0.0",
-    "iohook": "^0.6.1",
+    "iohook": "@0.6.1",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",
     "node-window-manager": "^1.1.0",
-    "open": "^6.4.0"
+    "open": "^6.4.0",
+    "zip-folder": "^1.0.0"
   },
   "devDependencies": {
     "concurrently": "^4.1.1",
