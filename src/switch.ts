@@ -18,6 +18,9 @@ import TemplateText from './text';
 import { Switch } from './enums';
 import { InterProcessChannel } from './interprocess';
 
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://57f0f5bf1422411ca17906d52bedb2ee@sentry.io/1541801' });
+
 const interChannel = new InterProcessChannel();
 const ioHook = require('iohook');
 
