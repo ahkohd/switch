@@ -6,6 +6,7 @@ matrix:
       node_js: "10"
       env:
       script:
+        - npm i -g pkg
         - npm run build-darwin
 cache:
   directories:
