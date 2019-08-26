@@ -24,7 +24,7 @@ branches:
     - master
 
 deploy:
-  release: myproduct-v$(appveyor_build_version)
+  release: switch-v$(appveyor_build_version)
   description: 'Release description'
   provider: GitHub
   auth_token:
@@ -34,4 +34,3 @@ deploy:
   prerelease: false
   on:
     branch: master                 # release from master branch only
-    APPVEYOR_REPO_TAG: true
