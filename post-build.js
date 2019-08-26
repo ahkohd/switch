@@ -36,11 +36,11 @@ const list = [{
         to: 'bin/notifier/terminal-notifier'
     },
     {
-        from: './node_modules/iohook/builds/node-v64-win32-x64/build/Release/iohook.node',
+        from: `./node_modules/iohook/builds/node-v64-${process.platform}-x64/build/Release/iohook.node`,
         to: 'bin/iohook.node'
     },
     {
-        from: './node_modules/iohook/builds/node-v64-win32-x64/build/Release/uiohook.dll',
+        from: `./node_modules/iohook/builds/node-v64-${process.platform}-x64/build/Release/uiohook.dll`,
         to: 'bin/uiohook.dll'
     },
     {
