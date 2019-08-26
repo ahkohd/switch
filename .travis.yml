@@ -2,7 +2,7 @@ matrix:
   include:
     - os: osx
       language: node_js
-      node_js: "10"
+      node_js: "11"
       script:
         - npm i -g pkg
         - npm run build-darwin
