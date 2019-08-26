@@ -75,10 +75,11 @@ zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, fun
 
         console.log('[info]: Releasing to github');
         var options = {
-            tag_name: getVersion,
+            tag_name: 'v'+getVersion,
             target_commitish: 'master',
             draft: true,
             prerelease: true,
+            name: 'v'+getVersion,
             repo: 'switch',
             owner: 'ahkohd',
             assets: [`./switch_deamon_v${getVersion}_${process.platform}.zip`],
