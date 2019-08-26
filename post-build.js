@@ -67,33 +67,33 @@ zipFolder('./bin', `./switch_deamon_v${getVersion}_${process.platform}.zip`, fun
         console.log('[success]: BUILD SUCCEED!');
 
         // release to github
-        console.log('[info]: Packing Binaries');
-        if (!process.env.GH_TOKEN) {
-            console.log('[info]: GH_TOKEN not set, Aborted release!');
-            return;
-        }
+        // console.log('[info]: Packing Binaries');
+        // if (!process.env.GH_TOKEN) {
+        //     console.log('[info]: GH_TOKEN not set, Aborted release!');
+        //     return;
+        // }
 
-        console.log('[info]: Releasing to github');
-        var options = {
-            tag_name: 'v'+getVersion,
-            target_commitish: 'master',
-            draft: true,
-            prerelease: true,
-            name: 'v'+getVersion,
-            body: '* Update\n',
-            repo: 'switch',
-            owner: 'ahkohd',
-            assets: [`./switch_deamon_v${getVersion}_${process.platform}.zip`],
-            endpoint: 'https://api.github.com' // for GitHub enterprise, use http(s)://hostname/api/v3
-        };
+        // console.log('[info]: Releasing to github');
+        // var options = {
+        //     tag_name: 'v'+getVersion,
+        //     target_commitish: 'master',
+        //     draft: true,
+        //     prerelease: true,
+        //     name: 'v'+getVersion,
+        //     body: '* Update\n',
+        //     repo: 'switch',
+        //     owner: 'ahkohd',
+        //     assets: [`./switch_deamon_v${getVersion}_${process.platform}.zip`],
+        //     endpoint: 'https://api.github.com' // for GitHub enterprise, use http(s)://hostname/api/v3
+        // };
 
-        options.auth = {
-            token: process.env.GH_TOKEN
-        };
+        // options.auth = {
+        //     token: process.env.GH_TOKEN
+        // };
 
-        ghRelease(options, function (err, result) {
-            if (err) throw err
-            console.log('[success]: Released to github');
-        });
+        // ghRelease(options, function (err, result) {
+        //     if (err) throw err
+        //     console.log('[success]: Released to github');
+        // });
     }
 });
