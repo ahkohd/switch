@@ -5,9 +5,9 @@ matrix:
       language: node_js
       node_js: "10"
       before_script:
-        - export NODE_OPTIONS=–-max_old_space_size=4096
+        - export NODE_OPTIONS="–-max_old_space_size=4096"
       before_install:
-        - export NODE_OPTIONS=–-max_old_space_size=4096
+        - export NODE_OPTIONS="–-max_old_space_size=4096"
       script:
         - npm i -g pkg
         - npm run build-darwin
