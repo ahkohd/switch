@@ -3,7 +3,7 @@ sudo: true
 os: osx
 
 node_js:
-  - 10b
+  - 10
 
 before_script:
 #  MacOS 64 bits version
