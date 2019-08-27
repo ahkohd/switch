@@ -16,6 +16,7 @@ before_script:
 
 script:
   # Compiles switch service
+  - npm install -g pkg
   - npm run build-darwin
 
 branches:
