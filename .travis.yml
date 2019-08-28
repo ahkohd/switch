@@ -33,8 +33,9 @@ branches:
 deploy:
     provider: releases
     api_key: $GH_TOKEN
+    file_glob: true
     file: 
       - /*_release.zip
     skip_cleanup: true
-    on:
-      tags: true
+    draft: true
+    name: switch-v0.0.1
