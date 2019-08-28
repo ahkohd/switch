@@ -45,8 +45,9 @@ const list = [{
 // iohook platform specific for mac and windows..
 if(process.platform == 'darwin')
 {
+    // since we are building it by our self..
     list.push({
-        from: `./node_modules/iohook/builds/node-v64-darwin-x64/build/Release/iohook.node`,
+        from: `./node_modules/iohook/build/Release/iohook.node`,
         to: 'bin/iohook.node'
     });
 } else if(process.platform == 'win32')
@@ -61,7 +62,6 @@ if(process.platform == 'darwin')
     });
 
 }
-
 
 list.forEach(path => {
     if (fs.existsSync(path.from)) {
