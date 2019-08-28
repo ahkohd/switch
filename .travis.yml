@@ -31,10 +31,9 @@ branches:
     - master
 
 deploy:
-    provider: releases
-    api_key: $GH_TOKEN
-    file: 
-      - /*_release.zip
-    skip_cleanup: true
-    draft: true
-    name: switch-v0.0.1
+     provider: releases
+     api_key: $GH_TOKEN
+     file: 
+         - /*_release.zip
+     skip_cleanup: true
+     name: switch-v0.0.1
