@@ -1,22 +1,41 @@
-matrix:
-  include:
-    - os: osx
-      osx_image: xcode10.8
-      language: node_js
-      node_js: "10"
-      env:
-        - NODE_OPTIONS=–-max_old_space_size=4096
-      before_script:
-        - export NODE_OPTIONS=–-max_old_space_size=4096
-      script:
-        - npm i -g pkg
-        - npm run build-darwin
+language: node_js
+sudo: true
+os: osx
 
-cache:
-  directories:
-    - node_modules
-    
+node_js:
+  - 9
+
+install:
+  - npm i --ignore-scripts
+  - npm install -g cmake-js
+  - npm install -g pkg
+
+before_script:
+#  MacOS 64 bits version
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list cmake &>/dev/null || brew install cmake; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list automake &>/dev/null || brew install automake; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list libtool &>/dev/null || brew install libtool; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list pkg-config &>/dev/null || brew install pkg-config; fi
+
+script:
+  # Compiles switch service
+  - mv -vn ./libuiohook ./node_modules/iohook/
+  - cd ./node_modules/node-window-manager && npm run rebuild
+  - cd ../iohook && chmod +x ./libuiohook/bootstrap.sh && cmake-js compile
+  - cd ../../
+  - npm run build-darwin
 
 branches:
   only:
     - master
+
+deploy:
+     provider: releases
+     api_key: $GH_TOKEN
+     file_glob: true
+     file: 
+        - ./*_release.zip
+     skip_cleanup: true
+     tag_name: switch-v0.0.1
+     name: switch-v0.0.1
