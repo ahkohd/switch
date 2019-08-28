@@ -30,13 +30,6 @@ branches:
   only:
     - master
 
-before_deploy:
-    # Set up git user name and tag this commit.
-    - git config --local user.name "ahkohd"
-    - git config --local user.email "victor.olorunbunmi@gmail.com"
-    - export TRAVIS_TAG=switch-v0.0.1
-    - git tag $TRAVIS_TAG
-
 deploy:
      provider: releases
      api_key: $GH_TOKEN
@@ -45,4 +38,5 @@ deploy:
         - ./*_release.zip
      skip_cleanup: true
      draft: true
+     tag_name: switch-v0.0.1
      name: switch-v0.0.1
