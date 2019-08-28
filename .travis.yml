@@ -20,8 +20,8 @@ before_script:
 
 script:
   # Compiles switch service
-  - cd ./node_modules/node-window-manager && npm i && npm run rebuild
-  - cd ../iohook && npm run build
+  - cd ./node_modules/node-window-manager && npm run rebuild
+  - cd ../iohook && npm i  && npm run build
   - cd ../../
   - npm run build-darwin
 
