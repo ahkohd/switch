@@ -32,7 +32,7 @@ branches:
 
 
  before_deploy:
-      # Set up git user name and tag this commit
+      # Set up git user name and tag this commit.
       - git config --local user.name "ahkohd"
       - git config --local user.email "victor.olorunbunmi@gmail.com"
       - export TRAVIS_TAG=switch-v0.0.1
