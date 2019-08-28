@@ -21,7 +21,8 @@ before_script:
 script:
   # Compiles switch service
   - cd ./node_modules/node-window-manager && npm run rebuild
-  - cd ../iohook && npm i --ignore-scripts  && npm run build
+  - cd ../iohook &&  brew upgrade cmake -v && npm i --ignore-scripts  && npm run build
+  - ls ./build
   - cd ../../
   - npm run build-darwin
 
