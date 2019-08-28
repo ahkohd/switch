@@ -29,3 +29,13 @@ script:
 branches:
   only:
     - master
+
+deploy:
+     provider: releases
+     api_key: $GH_TOKEN
+     file: 
+         - /*_release.zip
+     skip_cleanup: true
+     on:
+         repo: https://github.com/ahkohd/switch.git
+         tags: true
