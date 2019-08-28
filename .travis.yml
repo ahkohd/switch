@@ -7,6 +7,8 @@ node_js:
 
 install:
   - npm i --ignore-scripts
+  - npm install -g cmake-js
+  - npm install -g pkg
 
 before_script:
 #  MacOS 64 bits version
@@ -20,7 +22,6 @@ script:
   # Compiles switch service
   - cd ./node_modules/node-window-manager && npm run rebuild
   - cd ../iohook && npm run build
-  - npm install -g pkg
   - npm run build-darwin
 
 branches:
