@@ -19,7 +19,34 @@ if (!fs.existsSync('./bin/notifier')) {
     fs.mkdirSync('./bin/notifier');
 }
 
-const list = [{
+let list;
+
+// iohook platform specific for mac and windows..
+if(process.platform == 'darwin')
+{
+    // 1. terminal-notifier
+    // 2. addon.node - node window manager
+    // 3. iohook.node
+    list = [{
+        from: './node_modules/node-notifier/vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+        to: 'bin/notifier/terminal-notifier'
+    }, {
+        from: './node_modules/node-window-manager/build/Release/addon.node',
+        to: 'bin/addon.node'
+    },{
+        from: `./node_modules/iohook/build/Release/iohook.node`,
+        to: 'bin/iohook.node'
+    }];
+} else if(process.platform == 'win32')
+{
+    // 1. notifu
+    // 2. notifu64
+    // 3. SnoreToast
+    // 4. iohook.node
+    // 5. uiohook.dll
+    // 6. addon.node - node window manager
+    
+    list = [{
         from: './node_modules/node-notifier/vendor/notifu/notifu.exe',
         to: 'bin/notifier/notifu.exe'
     },
@@ -30,37 +57,16 @@ const list = [{
     {
         from: './node_modules/node-notifier/vendor/snoreToast/SnoreToast.exe',
         to: 'bin/notifier/SnoreToast.exe'
-    },
-    {
-        from: './node_modules/node-notifier/vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier',
-        to: 'bin/notifier/terminal-notifier'
-    },
-    {
-        from: './node_modules/node-window-manager/build/Release/addon.node',
-        to: 'bin/addon.node'
-    }
-];
-
-
-// iohook platform specific for mac and windows..
-if(process.platform == 'darwin')
-{
-    // since we are building it by our self..
-    list.push({
-        from: `./node_modules/iohook/build/Release/iohook.node`,
-        to: 'bin/iohook.node'
-    });
-} else if(process.platform == 'win32')
-{
-    list.push({
+    },{
         from: `./node_modules/iohook/builds/node-v64-win32-x64/build/Release/iohook.node`,
         to: 'bin/iohook.node'
-    });
-    list.push( {
+    },{
         from: `./node_modules/iohook/builds/node-v64-win32-x64/build/Release/uiohook.dll`,
         to: 'bin/uiohook.dll'
-    });
-
+    }, {
+        from: './node_modules/node-window-manager/build/Release/addon.node',
+        to: 'bin/addon.node'
+    }];
 }
 
 list.forEach(path => {
