@@ -36,6 +36,5 @@ deploy:
     file: 
       - /*_release.zip
     skip_cleanup: true
-    name: switch-v0.0.1 
     on:
       tags: true
