@@ -23,7 +23,7 @@ script:
   - cd ./node_modules/node-window-manager && npm run rebuild
   - cd ../iohook && npm i --ignore-scripts  && npm run build
   # &&  brew upgrade cmake -v 
-  - ls ./builds
+  - ls -R ./build
   - cd ../../
   - npm run build-darwin
 
