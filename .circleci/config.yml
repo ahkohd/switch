@@ -1,12 +1,14 @@
 version: 2
 jobs: # a basic unit of work in a run
   build:
-    docker: # run the steps with Docker
-      - image: circleci/node:10.15.1
+
     macos:  # indicate that we are using the macOS executor
       xcode: "10.0.0" # indicate our selected version of Xcode
     steps: # a series of commands to run
       - checkout  # pull down code from your version control system.
+      - run:
+          name: Setup Node
+          command: brew install node
       - run:
           # Install NPM packages
           name: Install packages
