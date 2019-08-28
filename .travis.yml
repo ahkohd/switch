@@ -3,7 +3,7 @@ sudo: true
 os: osx
 
 node_js:
-  - 10
+  - 9
 
 install:
   - npm i --ignore-scripts
@@ -12,7 +12,7 @@ install:
 
 before_script:
 #  MacOS 64 bits version
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list cmake &>/dev/null || brew install cmake; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list automake &>/dev/null || brew install automake; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list libtool &>/dev/null || brew install libtool; fi
@@ -21,8 +21,9 @@ before_script:
 script:
   # Compiles switch service
   - cd ./node_modules/node-window-manager && npm run rebuild
-  - cd ../iohook &&  brew upgrade cmake -v && npm i --ignore-scripts  && npm run build
-  - ls ./build
+  - cd ../iohook && npm i --ignore-scripts  && npm run build
+  # &&  brew upgrade cmake -v 
+  - ls ./builds
   - cd ../../
   - npm run build-darwin
 
