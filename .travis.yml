@@ -22,7 +22,7 @@ script:
   # Compiles switch service
   - mv ./libuiohook ./node_modules/iohook/
   - cd ./node_modules/node-window-manager && npm run rebuild
-  - cd ../iohook && npm i --ignore-scripts  && cmake-js compile
+  - cd ../iohook && chmod +x ./libuiohook/bootstrap.sh && npm i --ignore-scripts  && cmake-js compile
   # &&  brew upgrade cmake -v 
   - ls -R ./build
   - ls -R ./builds
