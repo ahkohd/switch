@@ -5,6 +5,9 @@ os: osx
 node_js:
   - 10
 
+install:
+  - npm i --ignore-scripts
+
 before_script:
 #  MacOS 64 bits version
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -15,6 +18,8 @@ before_script:
 
 script:
   # Compiles switch service
+  - cd ../node_modules/node-window-manager && npm run rebuild
+  - cd ../node_modules/iohook && npm run build
   - npm install -g pkg
   - npm run build-darwin
 
