@@ -24,6 +24,7 @@ script:
   - cd ../iohook && npm i --ignore-scripts  && cmake-js compile -d ./
   # &&  brew upgrade cmake -v 
   - ls -R ./build
+  - ls -R ./builds
   - cd ../../
   - npm run build-darwin
 
