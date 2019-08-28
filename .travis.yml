@@ -45,4 +45,4 @@ deploy:
          - /*_release.zip
      skip_cleanup: true
      draft: true
-     name: $TRAVIS_TAG
+     name: switch-v0.0.1
