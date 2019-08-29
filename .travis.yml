@@ -3,7 +3,7 @@ sudo: true
 os: osx
 
 node_js:
-  - 9
+  - 10
 
 install:
   - npm i --ignore-scripts
