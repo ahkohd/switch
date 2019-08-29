@@ -3,7 +3,7 @@ const zipFolder = require('zip-folder');
 const copyFileSync = require('fs-copy-file-sync');
 
 console.log("SWITCH SERVICE POST BUILD");
-// create bin folder if does not exists
+// create bin folder if does not exists.
 console.log('[info]: Checking ./bin');
 if (!fs.existsSync('./bin')) {
     console.log('[info]: ./bin not found!');
