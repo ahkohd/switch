@@ -11,7 +11,7 @@ if (!fs.existsSync('./bin')) {
     fs.mkdirSync('./bin');
 }
 
-// create bin/notifier folder if does not exists
+// create bin/notifier folder if does not exists.
 console.log('[info]: Checking ./bin/notifier');
 if (!fs.existsSync('./bin/notifier')) {
     console.log('[info]: ./bin/notifier not found!');
@@ -21,7 +21,7 @@ if (!fs.existsSync('./bin/notifier')) {
 
 let list;
 
-// iohook platform specific for mac and windows..
+// iohook platform specific for mac and windows.
 if(process.platform == 'darwin')
 {
     // 1. terminal-notifier
