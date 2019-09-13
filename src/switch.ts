@@ -90,10 +90,7 @@ ioHook.on('keydown', event => {
 });
 
 // Register and start hook.
-ioHook.start();
-
-// Alternatively, pass true to start in DEBUG mode.
-ioHook.start(true);
+(checkDevMode()) ? ioHook.start(true) : ioHook.start();
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
