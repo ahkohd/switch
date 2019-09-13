@@ -19,3 +19,10 @@ export interface SwitchHotApp
     path: string,
     pid: number
 }
+
+export interface Settings {
+    autoHide: boolean,
+    maximize: boolean,
+    placement: string,
+    disableAltgr2: boolean
+}

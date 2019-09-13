@@ -13,7 +13,7 @@ import {
     switchLog
 } from './utils';
 
-import { SwitchHotApp } from './interfaces';
+import { SwitchHotApp, Settings } from './interfaces';
 import TemplateText from './text';
 import { Switch } from './enums';
 import { InterProcessChannel } from './interprocess';
@@ -112,7 +112,7 @@ interChannel.emitter.on('update-hot-apps', (happs) => {
  * Fires when config 
  * update is recieved from client
  */
-interChannel.emitter.on('config-update', (settings) => {
+interChannel.emitter.on('config-update', (settings: Settings) => {
     log(Switch.LOG_INFO, 'Config update update received', settings);
     config = settings;
     saveConfig(settings);
