@@ -71,7 +71,8 @@ export function getConfig() {
     if (settings == null) {
         const initial = {
             autoHide: true,
-            maximize: true
+            maximize: true,
+            disableAltGr: false
         };
         config.set('config', initial);
         return initial;

@@ -85,6 +85,8 @@ ioHook.on('keyup', event => {
 ioHook.on('keydown', event => {
     if (event.altKey) {
         // If alt key is pressed, show dock
+        // if altgr is disabled do not show...
+        if(config.disableAltGr && event.rawcode == 165) return; 
         interChannel.sendShowClient();
     }
 });

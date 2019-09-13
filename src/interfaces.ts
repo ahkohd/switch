@@ -24,5 +24,5 @@ export interface Settings {
     autoHide: boolean,
     maximize: boolean,
     placement: string,
-    disableAltgr2: boolean
+    disableAltGr: boolean
 }
