@@ -1,11 +1,12 @@
 {
   "name": "switch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Switch between your favourite apps lightning fast (Windows, MacOS)",
   "main": "build/switch.js",
   "scripts": {
     "watch-ts": "tsc -w",
     "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js --dev\"",
+    "app": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
     "start": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
     "build-win32": "tsc  && pkg . --output bin/switch --targets node10-win-x64  && node post-build.js",
     "build-darwin": "tsc  && pkg . --output bin/switch --targets node10-macos-x64  && node post-build.js",

@@ -1,4 +1,4 @@
-import { SwitchNotiMessage, SwitchHotApp } from './interfaces';
+import { SwitchNotiMessage, SwitchHotApp, Settings } from './interfaces';
 import { Switch } from './enums';
 const ostype = require("os").type();
 const { windowManager } = require("node-window-manager");
@@ -67,11 +67,12 @@ export function getHotApps(): SwitchHotApp[] {
  * Get saved settings from store
  */
 export function getConfig() {
-    let settings = config.get('config');
+    let settings: Settings | null = config.get('config');
     if (settings == null) {
         const initial = {
             autoHide: true,
-            maximize: true
+            maximize: true,
+            disableAltGr: false
         };
         config.set('config', initial);
         return initial;
@@ -84,7 +85,7 @@ export function getConfig() {
  * Save config to store
  * @param {any} settings Settings to save
  */
-export function saveConfig(settings) {
+export function saveConfig(settings: Settings) {
     config.set('config', settings);
 }
 

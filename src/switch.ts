@@ -13,7 +13,7 @@ import {
     switchLog
 } from './utils';
 
-import { SwitchHotApp } from './interfaces';
+import { SwitchHotApp, Settings } from './interfaces';
 import TemplateText from './text';
 import { Switch } from './enums';
 import { InterProcessChannel } from './interprocess';
@@ -28,7 +28,8 @@ let clientPID = null;
 let hotapps: SwitchHotApp[] = getHotApps();
 let config = getConfig();
 const log = switchLog.bind({isDevMode: checkDevMode()});
-
+let disableKeyUpListen = false;
+let disableKeyUpListenTimeout;
 
 /**
  * Called to activate hot app switching
@@ -67,6 +68,8 @@ function react(event) {
  * @param  {} event
  */
 function fnMethod(event) {
+    // if altgr is disabled do not switch...
+
     if (event.altKey) {
         react(event);
     }
@@ -75,7 +78,17 @@ function fnMethod(event) {
 /**
  * Fires on user's keyup
  */
-ioHook.on('keyup', event => {
+
+ ioHook.on('keyup', event => {
+    // if altgr is disabled do not show dock...
+    if (disableKeyUpListen && event.rawcode != 164) {
+        if(disableKeyUpListenTimeout) clearTimeout(disableKeyUpListenTimeout);
+        disableKeyUpListenTimeout = setTimeout(() => {
+            clearTimeout(disableKeyUpListenTimeout)
+            disableKeyUpListen = false;
+           }, 1000);
+        return;
+    };
     fnMethod(event);
 });
 
@@ -85,15 +98,17 @@ ioHook.on('keyup', event => {
 ioHook.on('keydown', event => {
     if (event.altKey) {
         // If alt key is pressed, show dock
+        // if altgr is disabled do not show...
+        if(config.disableAltGr && event.rawcode == 165) {
+            disableKeyUpListen = true;
+            return;
+        }
         interChannel.sendShowClient();
     }
 });
 
 // Register and start hook.
-ioHook.start();
-
-// Alternatively, pass true to start in DEBUG mode.
-ioHook.start(true);
+(checkDevMode()) ? ioHook.start(true) : ioHook.start();
 
 // Registers the on toast click event handler.
 registerNotifierOnClick();
@@ -112,7 +127,7 @@ interChannel.emitter.on('update-hot-apps', (happs) => {
  * Fires when config 
  * update is recieved from client
  */
-interChannel.emitter.on('config-update', (settings) => {
+interChannel.emitter.on('config-update', (settings: Settings) => {
     log(Switch.LOG_INFO, 'Config update update received', settings);
     config = settings;
     saveConfig(settings);
