@@ -1,6 +1,6 @@
 {
   "name": "switch",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Switch between your favourite apps lightning fast (Windows, MacOS)",
   "main": "build/switch.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "node-notifier": "^5.4.1",
     "node-window-manager": "^1.1.0",
     "open": "^6.4.0",
+    "string-similarity": "^3.0.0",
     "zip-folder": "^1.0.0"
   },
   "devDependencies": {

@@ -28,7 +28,7 @@ artifacts:
     name: Releases
 
 deploy:
-  release: switch-v0.0.2
+  release: switch-v0.0.3
   description: 'Update'
   provider: GitHub
   auth_token:
