@@ -13,8 +13,9 @@ const config = new Conf({
     projectName: 'SwitchService',
     encryptionKey: '..kta#md!@a-k2j',
 });
-const log = switchLog.bind({isDevMode: checkDevMode()});
-const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath), './switch.ico')  : path.join(__dirname, '../assets/switch.ico');
+const log = switchLog.bind({ isDevMode: checkDevMode() });
+const icoPath = ((process as any).pkg) ? path.join(path.dirname(process.execPath), './switch.ico') : path.join(__dirname, '../assets/switch.ico');
+const stringSimilarity = require('string-similarity');
 
 log(Switch.LOG_INFO, 'ENV', ostype);
 
@@ -141,8 +142,7 @@ export function getProcessWithPID(pid: number) {
 export function getAllProcessThatMatchAppName(name: string, path: string) {
 
     let filterProcessByname = [];
-    if(ostype == Switch.WINDOWS)
-    {
+    if (ostype == Switch.WINDOWS) {
         // since window.isVisible() is only supported in Windows
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     } else {
@@ -150,7 +150,7 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
     }
 
     if (filterProcessByname == null || filterProcessByname.length == 0) {
-        return null;
+        return processPathSimilarityMatch(windowManager.getWindows().filter(window => window.isVisible()), path, .65);
     } else {
         const filterProcessByPath = filterProcessByname.filter(window => window.path.toLowerCase() == path.toLowerCase());
         if (filterProcessByPath == null || filterProcessByPath.length == 0) {
@@ -160,6 +160,36 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
         }
     }
 }
+
+/**
+ * Gets the processes that as the path that is most similar to a given path and a treshold..
+ * @param  {} processes List of processes to check
+ * @param  {} path Path to match agianst
+ * @param  {} treshold Threshold to mark a given path as similar.
+ * @returns Window[] | null
+ */
+export function processPathSimilarityMatch(processes, path, treshold): Window[] | null {
+    // loop trough the processes list and look for the process with the most similar path
+    // and the similarity exceeds the given treshnold.
+
+    let simScores = [];
+    // calculate the similarity for all processes
+    processes.forEach(process => {
+        simScores.push(stringSimilarity.compareTwoStrings(path, process.path));
+    });
+
+    // look for the highest score...
+    const highest = Math.max(...simScores);
+    if(highest < treshold) return null;
+    
+    // return processes that have these highest scores...
+    const finalProcesses = [];
+    simScores.forEach((score, index) => {
+        if(score == highest) finalProcesses.push(processes[index]);
+    });
+    return finalProcesses;
+}
+
 
 /** 
  * Minimize current window
@@ -199,7 +229,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
         if (!maximize) {
             least.restore();
         } else {
-            if(ostype == Switch.WINDOWS) least.maximize();
+            if (ostype == Switch.WINDOWS) least.maximize();
         }
     } else {
         // else loop to the rest and find the 1st windowed process..
@@ -211,10 +241,10 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
                 // Then bring the window to the top.
                 const hot = least[i];
                 hot.bringToTop();
-                if(!maximize) {
+                if (!maximize) {
                     hot.restore();
                 } else {
-                    if(ostype == Switch.WINDOWS) hot.maximize();
+                    if (ostype == Switch.WINDOWS) hot.maximize();
                 }
                 break;
             }
@@ -270,10 +300,8 @@ export function minimizeCurrentWindow() {
 /**
  * Checks devmode
  */
-export function checkDevMode()
-{
-    if(process.argv[2])
-    {
+export function checkDevMode() {
+    if (process.argv[2]) {
         return (process.argv[2].toLowerCase() == '--dev') ? true : false;
     } else {
         return false;
@@ -285,10 +313,8 @@ export function checkDevMode()
  * @param {string} type 
  * @param {string} msg 
  */
-export function switchLog(type: string, ...args: any[])
-{
-    if(this.isDevMode)
-    {
-        console.log('['+type+']:', ...args);
+export function switchLog(type: string, ...args: any[]) {
+    if (this.isDevMode) {
+        console.log('[' + type + ']:', ...args);
     }
 }
