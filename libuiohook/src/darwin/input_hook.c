@@ -377,7 +377,7 @@ static inline void process_key_pressed(uint64_t timestamp, CGEventRef event_ref)
 		
 		if (dispatch_sync_f_f != NULL && dispatch_main_queue_s != NULL && !is_runloop_main) {
 			logger(LOG_LEVEL_DEBUG,	"%s [%u]: Using dispatch_sync_f for key typed events.\n", __FUNCTION__, __LINE__);
-			(*dispatch_sync_f_f)(dispatch_main_queue_s, tis_message, &keycode_to_lookup);
+			// (*dispatch_sync_f_f)(dispatch_main_queue_s, tis_message, &keycode_to_lookup);
 		}
 		#if ! defined(USE_CARBON_LEGACY) && defined(USE_COREFOUNDATION)
 		else if (! is_runloop_main) {
