@@ -55,7 +55,10 @@ function react(event) {
         }
     } else {
         // if not hot app found make the client active..
-        if (event.rawcode >= 48 && event.rawcode <= 58) {
+        const outBound = (process.platform == 'darwin') ? 29 : 58;
+        const inBound = (process.platform == 'darwin') ? 18 : 48;
+        if (event.rawcode >= inBound && event.rawcode <= outBound) {
+            console.log('zapp app', event.rawcode)
             interChannel.sendShowClient();
             switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode - 48), hotApp: hotApp });
         }
@@ -91,6 +94,7 @@ function fnMethod(event) {
     };
     fnMethod(event);
 });
+
 
 /**
  * Fires on user's keydown
