@@ -36,14 +36,14 @@ let disableKeyUpListenTimeout;
  * @param  {} event
  */
 function react(event) {
-
-    let hotApp = whichHotApp(event.rawcode, hotapps);
+    let hotApp = whichHotApp((process.platform == "darwin" ? event.keycode : event.rawcode), hotapps);
     if (hotApp != null) {
         // Minimize current window
         minimizeCurrentWindow();
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's name and path
         let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
+
         // log(Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             // minimizeCurrentWindow();
@@ -55,13 +55,20 @@ function react(event) {
         }
     } else {
         // if not hot app found make the client active..
-        const outBound = (process.platform == 'darwin') ? 29 : 58;
-        const inBound = (process.platform == 'darwin') ? 18 : 48;
-        if (event.rawcode >= inBound && event.rawcode <= outBound) {
-            console.log('zapp app', event.rawcode)
-            interChannel.sendShowClient();
-            switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode - 48), hotApp: hotApp });
+    
+        if(process.platform == 'darwin')
+        {
+            if (event.keycode >= 0 && event.keycode <= 9) {
+                interChannel.sendShowClient();
+                switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.keycode -1), hotApp: hotApp });
+            }
+        } else {
+            if (event.rawcode >= 48 && event.rawcode <= 58) {
+                interChannel.sendShowClient();
+                switchMessage(Switch.ERROR_NOTI, { title: TemplateText.errorTitle, message: TemplateText.noHotApp(event.rawcode - 48), hotApp: hotApp });
+            }
         }
+
 
     }
 }
