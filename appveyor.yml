@@ -13,6 +13,7 @@ install:
   - ps: Install-Product node 10 x64
   - npm i
   - npm i -g pkg
+  - cd ./node_modules/node-window-manager && npm i && npm run build
 
 build_script:
   - npm run build-win32

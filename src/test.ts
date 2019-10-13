@@ -1,4 +1,5 @@
 const { windowManager } = require("node-window-manager");
-
-const windows = windowManager.getWindows();
-console.log(windows);
+const current = windowManager.getActiveWindow();
+console.log(current);
+current.minimize();
+console.log('worked!');
