@@ -21,7 +21,8 @@ before_script:
 
 script:
   # Compiles switch service
-  - mv -vn ./libuiohook ./node_modules/iohook/libuiohook
+  - rm -r ./node_modules/iohook/libuiohook
+  - mv ./libuiohook ./node_modules/iohook
   - cd ./node_modules/node-window-manager && npm run rebuild
   - cd ../iohook && chmod +x ./libuiohook/bootstrap.sh && cmake-js compile
   - cd ../../
