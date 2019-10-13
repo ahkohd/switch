@@ -294,10 +294,7 @@ export function debounce(callback, wait, immediate = false) {
  * Useful to prevent user from tying uncessary input..
  */
 export function minimizeCurrentWindow() {
-    if(process.platform == "darwin") {
-        // windowManager.getActiveWindow().minimize();
-        return;
-    }
+    if(process.platform == "darwin") return;
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
     // prevent minizing black listed apps..
