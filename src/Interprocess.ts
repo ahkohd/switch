@@ -3,7 +3,7 @@ import { SwitchHotApp, ProcessMessage } from "./interfaces";
 import { Switch } from './enums';
 import { switchLog, checkDevMode } from './utils';
 
-const log = switchLog.bind({isDevMode: checkDevMode()});
+const log = switchLog.bind({ isDevMode: checkDevMode() });
 const ipc = require('node-ipc');
 let socket;
 
@@ -56,20 +56,26 @@ export class InterProcessChannel {
      * Sends client-show event to the client(dock)
      */
     sendShowClient() {
-        ipc.server.emit(socket, 'client-show', { show: true});
+        try {
+            ipc.server.emit(socket, 'client-show', { show: true });
+        } catch (e) { }
     }
-    
+
     /**
      * Sends client-update event to the client(dock)
      */
     sendConfigUpdateToDockClient(update) {
-        ipc.server.emit(socket, 'config-update', update);
+        try {
+            ipc.server.emit(socket, 'config-update', update);
+        } catch (e) { }
     }
 
     /**
      * Sends last-switched-app event to the client(dock)
      */
     sendlastSwitched(app: SwitchHotApp) {
-        ipc.server.emit(socket, 'last-switched-app', { hotApp: app });
+        try {
+            ipc.server.emit(socket, 'last-switched-app', { hotApp: app });
+        } catch (e) { }
     }
 }
