@@ -145,12 +145,18 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
     if (ostype == Switch.WINDOWS) {
         // since window.isVisible() is only supported in Windows
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
-    } else {
-        filterProcessByname = windowManager.getWindows().filter(window => window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
+    }
+    else {
+        filterProcessByname = windowManager.getWindows().filter(window => window.path == path );
     }
 
     if (filterProcessByname == null || filterProcessByname.length == 0) {
-        return processPathSimilarityMatch(windowManager.getWindows().filter(window => window.isVisible()), path, .65);
+        if(process.platform == 'darwin')
+        {
+            return processPathSimilarityMatch(windowManager.getWindows(), path, .65);
+        } else {
+            return processPathSimilarityMatch(windowManager.getWindows().filter(window => window.isVisible()), path, .65);
+        }
     } else {
         const filterProcessByPath = filterProcessByname.filter(window => window.path.toLowerCase() == path.toLowerCase());
         if (filterProcessByPath == null || filterProcessByPath.length == 0) {
@@ -288,6 +294,10 @@ export function debounce(callback, wait, immediate = false) {
  * Useful to prevent user from tying uncessary input..
  */
 export function minimizeCurrentWindow() {
+    if(process.platform == "darwin") {
+        // windowManager.getActiveWindow().minimize();
+        return;
+    }
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
     // prevent minizing black listed apps..
