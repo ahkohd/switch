@@ -9,7 +9,8 @@ install:
   - npm i --ignore-scripts
   - npm install -g cmake-js
   - npm install -g pkg
-  - cd ./node_modules/node-window-manager && npm i && npm run build
+  - cd ./node_modules/node-window-manager && npm i && npm run build && cd ../../
+  - pwd
 
 before_script:
 #  MacOS 64 bits version
