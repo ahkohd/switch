@@ -147,13 +147,13 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
         filterProcessByname = windowManager.getWindows().filter(window => window.isVisible() && window.getTitle().toLowerCase().includes(name.split('.exe')[0].toLowerCase().replace(/[^a-zA-Z ]/, ' ')));
     }
     else {
-        filterProcessByname = windowManager.getWindows().filter(window => window.path == path );
+        filterProcessByname = windowManager.getWindows().filter(window => window.path == path);
     }
 
     if (filterProcessByname == null || filterProcessByname.length == 0) {
-        if(process.platform == 'darwin')
-        {
-            return processPathSimilarityMatch(windowManager.getWindows(), path, .65);
+        if (process.platform == 'darwin') {
+            return null;
+            // return processPathSimilarityMatch(windowManager.getWindows(), path, .65);
         } else {
             return processPathSimilarityMatch(windowManager.getWindows().filter(window => window.isVisible()), path, .65);
         }
@@ -186,12 +186,12 @@ export function processPathSimilarityMatch(processes, path, treshold): Window[] 
 
     // look for the highest score...
     const highest = Math.max(...simScores);
-    if(highest < treshold) return null;
-    
+    if (highest < treshold) return null;
+
     // return processes that have these highest scores...
     const finalProcesses = [];
     simScores.forEach((score, index) => {
-        if(score == highest) finalProcesses.push(processes[index]);
+        if (score == highest) finalProcesses.push(processes[index]);
     });
     return finalProcesses;
 }
@@ -294,7 +294,7 @@ export function debounce(callback, wait, immediate = false) {
  * Useful to prevent user from tying uncessary input..
  */
 export function minimizeCurrentWindow() {
-    if(process.platform == "darwin") return;
+    if (process.platform == "darwin") return;
     const current = windowManager.getActiveWindow();
     const info = current.getInfo();
     // prevent minizing black listed apps..
@@ -323,5 +323,20 @@ export function checkDevMode() {
 export function switchLog(type: string, ...args: any[]) {
     if (this.isDevMode) {
         console.log('[' + type + ']:', ...args);
+    }
+}
+
+/**
+ * This method brings switch to top so that it can eat the next keystrokes
+ * and prevents user from typing unintended text into their last active window.
+ * A clever code...
+ */
+export function bingSwitchToFocus(pid) {
+    if (process.platform == 'darwin') {
+        try {
+            const switchWindow = windowManager.getWindows().filter(window => window.processId == pid);
+            console.log("FOCUSED SWITCH:", switchWindow.length > 0 ? true : false);
+            switchWindow[0].bringToTop();
+        } catch (e) { }
     }
 }

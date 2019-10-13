@@ -10,7 +10,8 @@ import {
     saveConfig,
     getConfig,
     checkDevMode,
-    switchLog
+    switchLog,
+    bingSwitchToFocus
 } from './utils';
 
 import { SwitchHotApp, Settings } from './interfaces';
@@ -43,7 +44,6 @@ function react(event) {
         // If the hot app that match the rawcode is found...
         // get all process that match hot app's name and path
         let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-
         // log(Switch.LOG_INFO, 'matched windows', processes);
         if (processes) {
             // minimizeCurrentWindow();
@@ -108,6 +108,8 @@ function fnMethod(event) {
  */
 ioHook.on('keydown', event => {
     if (event.altKey) {
+        // focus on swicth to prevent keystokes entering other apps..
+        bingSwitchToFocus(clientPID);
         // If alt key is pressed, show dock
         // if altgr is disabled do not show...
         if(config.disableAltGr && event.rawcode == 165) {
