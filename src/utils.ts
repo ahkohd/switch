@@ -235,7 +235,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
         if (!maximize) {
             least.restore();
         } else {
-            if (ostype == Switch.WINDOWS) least.maximize();
+            least.maximize();
         }
     } else {
         // else loop to the rest and find the 1st windowed process..
@@ -250,7 +250,7 @@ export function MakeHotAppActive(hotProcesses: any[], maximize: boolean = true) 
                 if (!maximize) {
                     hot.restore();
                 } else {
-                    if (ostype == Switch.WINDOWS) hot.maximize();
+                    hot.maximize();
                 }
                 break;
             }
