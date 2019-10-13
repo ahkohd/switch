@@ -10,7 +10,8 @@ import {
     saveConfig,
     getConfig,
     checkDevMode,
-    switchLog
+    switchLog,
+    bingSwitchToFocus
 } from './utils';
 
 import { SwitchHotApp, Settings } from './interfaces';
@@ -107,6 +108,8 @@ function fnMethod(event) {
  */
 ioHook.on('keydown', event => {
     if (event.altKey) {
+        // focus on swicth to prevent keystokes entering other apps..
+        bingSwitchToFocus(clientPID);
         // If alt key is pressed, show dock
         // if altgr is disabled do not show...
         if(config.disableAltGr && event.rawcode == 165) {
