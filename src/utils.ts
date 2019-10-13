@@ -153,7 +153,8 @@ export function getAllProcessThatMatchAppName(name: string, path: string) {
     if (filterProcessByname == null || filterProcessByname.length == 0) {
         if(process.platform == 'darwin')
         {
-            return processPathSimilarityMatch(windowManager.getWindows(), path, .65);
+            return null;
+            // return processPathSimilarityMatch(windowManager.getWindows(), path, .65);
         } else {
             return processPathSimilarityMatch(windowManager.getWindows().filter(window => window.isVisible()), path, .65);
         }
