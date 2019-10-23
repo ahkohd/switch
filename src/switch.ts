@@ -148,7 +148,7 @@ if (process.platform == "darwin") {
     for (const current of numKeys) {
 
         ioHook.registerShortcut([3676, 3640, current.keycode], (keys) => {
-            console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
+            // console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
             interChannel.sendShowClient();
             react(current);
         });
