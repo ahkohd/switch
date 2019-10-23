@@ -84,7 +84,6 @@ function fnMethod(event) {
 }
 
 if (process.platform == 'win32') {
-
     /**
     * Fires on user's keyup
     */
