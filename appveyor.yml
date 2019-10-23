@@ -29,8 +29,8 @@ artifacts:
     name: Releases
 
 deploy:
-  release: switch-v0.0.3
-  description: 'Update'
+  release: switch-v0.0.4
+  description: "Update"
   provider: GitHub
   auth_token:
     secure: CT5g4t5aF301xzMk6NfS5ieiYT/PB77ua4s6Z7T2glcYG9dd1A7skEoQy1oNoCv2

@@ -13,8 +13,8 @@ install:
   - pwd
 
 before_script:
-#  MacOS 64 bits version
-#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  #  MacOS 64 bits version
+  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list cmake &>/dev/null || brew install cmake; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list automake &>/dev/null || brew install automake; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list libtool &>/dev/null || brew install libtool; fi
@@ -33,11 +33,11 @@ branches:
     - master
 
 deploy:
-     provider: releases
-     api_key: $GH_TOKEN
-     file_glob: true
-     file: 
-        - ./*_release.zip
-     skip_cleanup: true
-     tag_name: switch-v0.0.3
-     name: switch-v0.0.3
+  provider: releases
+  api_key: $GH_TOKEN
+  file_glob: true
+  file:
+    - ./*_release.zip
+  skip_cleanup: true
+  tag_name: switch-v0.0.4
+  name: switch-v0.0.4
