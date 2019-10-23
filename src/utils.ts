@@ -331,7 +331,7 @@ export function switchLog(type: string, ...args: any[]) {
  * and prevents user from typing unintended text into their last active window.
  * A clever code...
  */
-export function bingSwitchToFocus(pid) {
+export function bringSwitchToFocus(pid) {
     if (process.platform == 'darwin') {
         try {
             const switchWindow = windowManager.getWindows().filter(window => window.processId == pid);
