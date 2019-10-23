@@ -147,11 +147,21 @@ if (process.platform == "darwin") {
     // regsiter a num keys with comand+option as shortcuts
     for (const current of numKeys) {
 
+        // right 
         ioHook.registerShortcut([3676, 3640, current.keycode], (keys) => {
             // console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
             interChannel.sendShowClient();
             react(current);
         });
+
+        // left 
+        ioHook.registerShortcut([3675, 56, current.keycode], (keys) => {
+            // console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
+            interChannel.sendShowClient();
+            react(current);
+        });
+
+
 
     }
 
