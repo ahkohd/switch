@@ -1,6 +1,6 @@
 {
   "name": "switch",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Switch between your favourite apps lightning fast (Windows, MacOS)",
   "main": "build/switch.js",
   "scripts": {
