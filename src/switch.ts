@@ -170,6 +170,10 @@ if (process.platform == "darwin") {
         interChannel.sendShowClient();
     });
 
+    ioHook.registerShortcut([3675, 56], () => {
+        interChannel.sendShowClient();
+    });
+
 
 }
 
