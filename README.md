@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ahkohd/switch.svg?branch=master)](https://travis-ci.org/ahkohd/switch) [![Build status](https://ci.appveyor.com/api/projects/status/gbm5k5qc2l32s8iv?svg=true)](https://ci.appveyor.com/project/ahkohd/switch)
 
-Switch's crossplatform stand-alone service for switching apps. Uses IPC (Inter Process Communication) to communicate (two-way) with [Switch Desktop.](http://ahkohd.github.com/switch-desktop)
+Switch's crossplatform stand-alone service for switching apps. Uses IPC (Inter Process Communication) to communicate (two-way) with [Switch Desktop.](https://github.com/ahkohd/switch-desktop)
 
 # Running
 
