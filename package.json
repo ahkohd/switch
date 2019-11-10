@@ -8,9 +8,10 @@
     "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js --dev\"",
     "app": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
     "start": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
-    "build-win32": "tsc  && pkg . --output bin/switch --targets node10-win-x64  && node post-build.js",
-    "build-darwin": "tsc  && pkg . --output bin/switch --targets node10-macos-x64  && node post-build.js",
-    "build-linux": "tsc  && pkg . --output bin/switch --targets node10-linux-x64  && node post-build.js"
+    "build-scripts": "cd ./node_modules/node-window-manager && npm i && npm run build  && cd ../../ && tsc",
+    "build-win32": "npm run build-scripts  && pkg . --output bin/switch --targets node10-win-x64  && node post-build.js",
+    "build-darwin": "npm run build-scripts  && pkg . --output bin/switch --targets node10-macos-x64  && node post-build.js",
+    "build-linux": "npm run build-scripts  && pkg . --output bin/switch --targets node10-linux-x64  && node post-build.js"
   },
   "bin": "build/switch.js",
   "author": "Victor Aremu",
