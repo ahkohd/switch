@@ -25,7 +25,11 @@ Clone this repo, and cd into it, Then:
 
 ```bash
 $npm i
-$npm run build
+# for windows build
+$npm run build-win32
+# for mac build
+$npm run build-darwin
+
 ```
 
 # License
