@@ -34,6 +34,7 @@
   "devDependencies": {
     "concurrently": "^4.1.1",
     "nodemon": "^1.19.1",
+    "pkg": "^4.4.0",
     "typescript": "^3.5.3"
   },
   "iohook": {
