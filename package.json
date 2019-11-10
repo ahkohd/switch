@@ -33,6 +33,7 @@
     "zip-folder": "^1.0.0"
   },
   "devDependencies": {
+    "cmake-js": "^6.0.0",
     "concurrently": "^4.1.1",
     "nodemon": "^1.19.1",
     "pkg": "^4.4.0",
