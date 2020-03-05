@@ -2,18 +2,18 @@
   "name": "switch",
   "version": "0.0.4",
   "description": "Switch between your favourite apps lightning fast (Windows, MacOS)",
-  "main": "build/switch.js",
+  "main": "build/main.js",
   "scripts": {
     "watch-ts": "tsc -w",
-    "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js --dev\"",
-    "app": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
-    "start": "concurrently \"npm:watch-ts\" \"nodemon ./build/switch.js\"",
+    "dev": "concurrently \"npm:watch-ts\" \"nodemon ./build/main.js --dev\"",
+    "app": "concurrently \"npm:watch-ts\" \"nodemon ./build/main.js\"",
+    "start": "concurrently \"npm:watch-ts\" \"nodemon ./build/main.js\"",
     "build-scripts": "cd ./node_modules/node-window-manager && npm i && npm run build  && cd ../../ && tsc",
     "build-win32": "npm run build-scripts  && pkg . --output bin/switch --targets node10-win-x64  && node post-build.js",
     "build-darwin": "npm run build-scripts  && pkg . --output bin/switch --targets node10-macos-x64  && node post-build.js",
     "build-linux": "npm run build-scripts  && pkg . --output bin/switch --targets node10-linux-x64  && node post-build.js"
   },
-  "bin": "build/switch.js",
+  "bin": "build/main.js",
   "author": "Victor Aremu",
   "license": "",
   "repository": {
@@ -27,7 +27,7 @@
     "iohook": "^0.6.1",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",
-    "node-window-manager": "git+https://github.com/sentialx/node-window-manager.git",
+    "node-window-manager": "^2.0.1",
     "open": "^6.4.0",
     "string-similarity": "^3.0.0",
     "zip-folder": "^1.0.0"
