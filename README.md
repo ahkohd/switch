@@ -27,7 +27,10 @@ Clone this repo, and cd into it, Then:
 $npm i
 # for windows build
 $npm run build-win32
-# for mac build
+
+# for mac build..
+$chmod +x _darwin.bash
+$./_darwin.bash
 $npm run build-darwin
 
 ```
