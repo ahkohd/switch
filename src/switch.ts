@@ -1,215 +1,194 @@
-import {
-  whichHotApp,
-  switchMessage,
-  saveHotApps,
-  MakeHotAppActive,
-  getAllProcessThatMatchAppName,
-  registerNotifierOnClick,
-  minimizeCurrentWindow,
-  getHotApps,
-  saveConfig,
-  getConfig,
-  isDevMode
-} from "./utils";
-
-import { SwitchHotApp, Settings } from "./interfaces";
-import TemplateText from "./text";
+import InterProcessChannel from "./InterProcessChannel";
 import SWITCH from "./enums";
-import { InterProcessChannel } from "./InterProcessChannel";
-
-const interChannel = new InterProcessChannel();
+import Logger from "./Logger";
+import { TEXT } from "./text";
+import { SwitchHotApp, Settings } from "./interfaces";
+import {
+  getHotApps,
+  whichHotApp,
+  minimizeCurrentWindow,
+  getAllProcessThatMatchAppName,
+  makeHotAppCurrentWindowOnTop,
+  getConfig,
+  notifyUserAProcessNotFound,
+  notifyUserNoHotMatchHotKey,
+  isDevMode,
+  saveConfig
+} from "./utils";
+import { DARWIN_KEY_MAP } from "./constants";
 const ioHook = require("iohook");
 
-let clientPID = null;
-let hotapps: SwitchHotApp[] = getHotApps();
-let config = getConfig();
-const log = switchLog.bind({ isDevMode: checkDevMode() });
-let disableKeyUpListen = false;
-let disableKeyUpListenTimeout;
+export default class Switch {
+  private clientPID;
+  private config;
+  private hotApps: Array<SwitchHotApp>;
+  private disableKeyUpListen: boolean = false;
+  private disableKeyUpListenTimeout: any;
 
-/**
- * Called to activate hot app switching
- * @param  {} event
- */
-function react(event) {
-  let hotApp = whichHotApp(
-    process.platform == "darwin" ? event.keycode : event.rawcode,
-    hotapps
-  );
-  if (hotApp != null) {
-    // Minimize current window
-    minimizeCurrentWindow();
-    // If the hot app that match the rawcode is found...
-    // get all process that match hot app's name and path
-    let processes = getAllProcessThatMatchAppName(hotApp.name, hotApp.path);
-    // log(Switch.LOG_INFO, 'matched windows', processes);
-    if (processes) {
-      // minimizeCurrentWindow();
-      // Make hotapp active
-      MakeHotAppActive(processes, config.maximize);
-      interChannel.sendlastSwitched(hotApp);
-    } else {
-      switchMessage(Switch.ERROR_NOTI, {
-        title: TemplateText.errorTitle,
-        message: TemplateText.processNotFound(hotApp.name),
-        hotApp: hotApp
-      });
-    }
-  } else {
-    // if not hot app found make the client active..
-
-    if (process.platform == "darwin") {
-      if (event.keycode >= 0 && event.keycode <= 9) {
-        interChannel.sendShowClient();
-        switchMessage(Switch.ERROR_NOTI, {
-          title: TemplateText.errorTitle,
-          message: TemplateText.noHotApp(event.keycode - 1),
-          hotApp: hotApp
-        });
-      }
-    } else {
-      if (event.rawcode >= 48 && event.rawcode <= 58) {
-        interChannel.sendShowClient();
-        switchMessage(Switch.ERROR_NOTI, {
-          title: TemplateText.errorTitle,
-          message: TemplateText.noHotApp(event.rawcode - 48),
-          hotApp: hotApp
-        });
-      }
-    }
+  constructor(private ipc: InterProcessChannel, private logger: Logger) {
+    this.config = getConfig();
+    this.hotApps = getHotApps();
+    this.handleIPCEvents();
   }
-}
 
-/**
- * Activates hot app switch if user holds the alt key
- * @param  {} event
- */
-function fnMethod(event) {
-  // if altgr is disabled do not switch...
-
-  if (event.altKey) {
-    react(event);
-  }
-}
-
-if (process.platform == "win32") {
   /**
-   * Fires on user's keyup
+   * uses `iohook` to register functions that will
+   * get called when some keycombos are matched
+   *
    */
 
-  ioHook.on("keyup", event => {
-    // if altgr is disabled do not show dock...
-    if (disableKeyUpListen && event.rawcode != 164) {
-      if (disableKeyUpListenTimeout) clearTimeout(disableKeyUpListenTimeout);
-      disableKeyUpListenTimeout = setTimeout(() => {
-        clearTimeout(disableKeyUpListenTimeout);
-        disableKeyUpListen = false;
-      }, 1000);
+  public registerListenersForUserInput() {
+    if (process.platform == "win32") this.registerListenerWin32();
+    if (process.platform == "darwin") this.registerListenerDarwin();
+  }
+
+  /**
+   * starts `iohook`.
+   * `Switch` starts listening for input.
+   */
+  public start() {
+    ioHook.start(isDevMode());
+  }
+
+  /**
+   * Switch to an hot app that matches the assigned keycode
+   * @param  {} event
+   */
+
+  switchApp(event: any) {
+    let matchedHotApp: SwitchHotApp | null = whichHotApp(
+      process.platform == "darwin" ? event.keycode : event.rawcode,
+      this.hotApps
+    );
+    if (!matchedHotApp) {
+      notifyUserNoHotMatchHotKey(event.keycode, event.rawcode, matchedHotApp);
       return;
     }
-    fnMethod(event);
-  });
+    minimizeCurrentWindow(this.logger);
+    const processes = getAllProcessThatMatchAppName(
+      matchedHotApp.name,
+      matchedHotApp.path
+    );
+    if (processes) {
+      makeHotAppCurrentWindowOnTop(
+        processes,
+        this.config.maximize,
+        this.logger
+      );
+      this.ipc.sendlastSwitched(matchedHotApp);
+      this.logger.log(
+        SWITCH.LOG_INFO,
+        `${TEXT.SWITCHED_HOTAPP} ${matchedHotApp.name}`
+      );
+    } else {
+      notifyUserAProcessNotFound(matchedHotApp);
+    }
+  }
 
   /**
-   * Fires on user's keydown
+   * Activates hot app switch if user holds the alt key.
+   * `win-32`
+   * @param  {} event
    */
-  ioHook.on("keydown", event => {
+
+  fnMethod(event) {
     if (event.altKey) {
-      // If alt key is pressed, show dock
-      // if altgr is disabled do not show...
-      if (config.disableAltGr && event.rawcode == 165) {
-        disableKeyUpListen = true;
+      this.switchApp(event);
+    }
+  }
+
+  /**
+   * Register Handler to listen for io hook events.
+   * `win-32`
+   */
+
+  registerListenerWin32() {
+    ioHook.on("keyup", event => {
+      // if altgr is disabled do not show dock...
+      if (this.disableKeyUpListen && event.rawcode != 164) {
+        if (this.disableKeyUpListenTimeout)
+          clearTimeout(this.disableKeyUpListenTimeout);
+        this.disableKeyUpListenTimeout = setTimeout(() => {
+          clearTimeout(this.disableKeyUpListenTimeout);
+          this.disableKeyUpListen = false;
+        }, 1000);
         return;
       }
-      interChannel.sendShowClient();
-    }
-  });
-}
-
-if (process.platform == "darwin") {
-  // MacOS switching strategy ...
-
-  const numKeys = [
-    // 1
-    { keycode: 2, rawcode: 18 },
-    // 2
-    { keycode: 3, rawcode: 19 },
-    // 3
-    { keycode: 4, rawcode: 20 },
-    // 4
-    { keycode: 5, rawcode: 21 },
-    // 5
-    { keycode: 6, rawcode: 23 },
-    // 6
-    { keycode: 7, rawcode: 22 },
-    // 7
-    { keycode: 8, rawcode: 26 },
-    // 8
-    { keycode: 9, rawcode: 28 },
-    // 9
-    { keycode: 10, rawcode: 25 },
-    // 0
-    { keycode: 11, rawcode: 29 }
-  ];
-
-  // regsiter a num keys with comand+option as shortcuts
-  for (const current of numKeys) {
-    // right
-    ioHook.registerShortcut([3676, 3640, current.keycode], keys => {
-      // console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
-      interChannel.sendShowClient();
-      react(current);
+      this.fnMethod(event);
     });
 
-    // left
-    ioHook.registerShortcut([3675, 56, current.keycode], keys => {
-      // console.log('Cmd+Option+' + (current.keycode - 1), keys, current)
-      interChannel.sendShowClient();
-      react(current);
+    ioHook.on("keydown", event => {
+      if (event.altKey) {
+        // If alt key is pressed, show dock
+        // if altgr is disabled do not show...
+        if (this.config.disableAltGr && event.rawcode == 165) {
+          this.disableKeyUpListen = true;
+          return;
+        }
+        this.ipc.sendShowClient();
+      }
     });
   }
 
-  // When user tabs Comand+Options
-  ioHook.registerShortcut([3676, 3640], () => {
-    interChannel.sendShowClient();
-  });
+  /**
+   * Register Handler to listen for io hook events.
+   * `darwin`
+   */
 
-  ioHook.registerShortcut([3675, 56], () => {
-    interChannel.sendShowClient();
-  });
+  registerListenerDarwin() {
+    for (const currentKey of DARWIN_KEY_MAP) {
+      /// register shortcut keys for
+      /// LEFT
+      /// Cmd+Option + (1 to 9)
+      ioHook.registerShortcut([3676, 3640, current.keycode], keys => {
+        this.ipc.sendShowClient();
+        this.switchApp(currentKey);
+      });
+
+      // RIGHT
+      ioHook.registerShortcut([3675, 56, current.keycode], keys => {
+        this.ipc.sendShowClient();
+        this.switchApp(current);
+      });
+    }
+
+    /// Listen for when user taps LEFT Comand+Options
+    ioHook.registerShortcut([3676, 3640], () => {
+      this.ipc.sendShowClient();
+    });
+
+    /// Listen for when user taps RIGHT Comand+Options
+    ioHook.registerShortcut([3675, 56], () => {
+      this.ipc.sendShowClient();
+    });
+  }
+
+  /**
+   * Register listens for IPC events
+   */
+
+  handleIPCEvents() {
+    /**
+     * Fires when config
+     * update is recieved from client
+     */
+    this.ipc.emitter.on("config-update", (settings: Settings) => {
+      this.logger.log(
+        SWITCH.LOG_INFO,
+        "Config update update received",
+        settings
+      );
+      this.config = settings;
+      saveConfig(settings);
+    });
+
+    /**
+     * Fires when docks PID
+     * update is recieved from client
+     */
+    this.ipc.emitter.on("client-pid", pid => {
+      this.clientPID = pid;
+      this.logger.log(SWITCH.LOG_INFO, TEXT.CLIENT_PID_MSG_PREFIX, pid);
+    });
+  }
 }
-
-// Register and start hook.
-checkDevMode() ? ioHook.start(true) : ioHook.start();
-
-// Registers the on toast click event handler.
-registerNotifierOnClick();
-
-/**
- * Fires when hot apps list
- * update is recieved from client
- */
-interChannel.emitter.on("update-hot-apps", happs => {
-  hotapps = happs;
-  log(Switch.LOG_INFO, "Hot apps update received", hotapps);
-  saveHotApps(happs);
-});
-
-/**
- * Fires when config
- * update is recieved from client
- */
-interChannel.emitter.on("config-update", (settings: Settings) => {
-  log(Switch.LOG_INFO, "Config update update received", settings);
-  config = settings;
-  saveConfig(settings);
-});
-
-/**
- * Fires when docks PID
- * update is recieved from client
- */
-interChannel.emitter.on("client-pid", pid => {
-  clientPID = pid;
-  log(Switch.LOG_INFO, "Hot client pid ::", pid);
-});

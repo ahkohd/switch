@@ -1,6 +1,6 @@
 import { SwitchNotiMessage, SwitchHotApp, Settings } from "./interfaces";
 import SWITCH from "./enums";
-import { TEXT } from "./text";
+import TemplateText, { TEXT } from "./text";
 import Logger from "./Logger";
 const { windowManager } = require("node-window-manager");
 const open = require("open");
@@ -272,7 +272,7 @@ export const clearCurrentWidow = () => {
  * @param  {} hotProcesses - List of matched hot processess
  */
 
-export const MakeHotAppActive = (
+export const makeHotAppCurrentWindowOnTop = (
   hotProcesses: any[],
   maximize: boolean = true,
   logger: Logger
@@ -390,5 +390,55 @@ export const bringSwitchToFocus = (pid, logger: Logger) => {
       logger.log(TEXT.FOCUS_SWITCH, switchWindow.length > 0 ? true : false);
       switchWindow[0].bringToTop();
     } catch (e) {}
+  }
+};
+
+/**
+ * Shows a nofication to notify the user that a process
+ * is not found
+ */
+
+export const notifyUserAProcessNotFound = (
+  matchedHotApp: SwitchHotApp | null
+) => {
+  switchMessage(SWITCH.ERROR_NOTI, {
+    title: TemplateText.errorTitle,
+    message: TemplateText.processNotFound(matchedHotApp.name),
+    hotApp: matchedHotApp
+  });
+};
+
+/**
+ * Shows a notification to the user that the hot app
+ * that matches the hotkey is not found.
+ *
+ * @param keycode {number}
+ * @param rawcode {number}
+ * @param matchedHotApp {SwitchHotApp | null}
+ */
+
+export const notifyUserNoHotMatchHotKey = (
+  keycode: number,
+  rawcode: number,
+  matchedHotApp: SwitchHotApp | null
+) => {
+  if (process.platform == "darwin") {
+    if (keycode >= 0 && keycode <= 9) {
+      this.ipc.sendShowClient();
+      switchMessage(SWITCH.ERROR_NOTI, {
+        title: TemplateText.errorTitle,
+        message: TemplateText.noHotApp(keycode - 1),
+        hotApp: matchedHotApp
+      });
+    }
+  } else {
+    if (rawcode >= 48 && rawcode <= 58) {
+      this.ipc.sendShowClient();
+      switchMessage(SWITCH.ERROR_NOTI, {
+        title: TemplateText.errorTitle,
+        message: TemplateText.noHotApp(rawcode - 48),
+        hotApp: matchedHotApp
+      });
+    }
   }
 };

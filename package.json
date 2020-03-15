@@ -24,7 +24,7 @@
     "@sentry/node": "^5.6.2",
     "conf": "^5.0.0",
     "fs-copy-file-sync": "^1.1.1",
-    "iohook": "^0.6.1",
+    "iohook": "^0.6.5",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.1",
     "node-window-manager": "^2.0.1",

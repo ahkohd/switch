@@ -21,5 +21,7 @@ export enum TEXT {
   SWITCH_PREFIX = "Switch - ",
   SORTED_PROCESSES = "Sorted processes",
   UNABLE_TO_MINIMIZE = "Unable to minimize.",
-  FOCUS_SWITCH = "FOCUSED SWITCH:"
+  FOCUS_SWITCH = "FOCUSED SWITCH:",
+  SWITCHED_HOTAPP = "Switched To ",
+  CLIENT_PID_MSG_PREFIX = "CLIENT PID ::"
 }
