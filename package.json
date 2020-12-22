@@ -26,7 +26,7 @@
     "fs-copy-file-sync": "^1.1.1",
     "iohook": "^0.6.1",
     "node-ipc": "^9.1.1",
-    "node-notifier": "^5.4.1",
+    "node-notifier": "^8.0.1",
     "node-window-manager": "git+https://github.com/sentialx/node-window-manager.git",
     "open": "^6.4.0",
     "string-similarity": "^3.0.0",
